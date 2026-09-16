@@ -1,4 +1,6 @@
-import type { InputHTMLAttributes, ReactNode } from 'react';
+import { useId, type InputHTMLAttributes, type ReactNode } from 'react';
+
+import { cn } from './utils';
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: ReactNode;
@@ -6,27 +8,30 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: ReactNode;
 }
 
-/**
- * Text input primitive with an optional label, help text, and error
- * message. Generates a stable-per-render `id` when none is supplied so the
- * label's `htmlFor` always resolves. Forwards all native input attributes.
- */
-export function Input({ label, helpText, error, id, className = '', ...rest }: InputProps) {
-  const inputId = id ?? `dar-input-${Math.random().toString(36).slice(2, 8)}`;
+export function Input({ label, helpText, error, id, className, ...rest }: InputProps) {
+  const generatedId = useId();
+  const inputId = id ?? generatedId;
+
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1.5">
       {label ? (
-        <label htmlFor={inputId} className="text-sm font-medium text-gray-700">
+        <label htmlFor={inputId} className="text-sm font-medium leading-none text-gray-700">
           {label}
         </label>
       ) : null}
       <input
         id={inputId}
-        className={`block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:border-blue-500 ${error ? 'border-red-500' : ''} ${className}`}
+        className={cn(
+          'flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 shadow-sm transition-colors',
+          'placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1',
+          'disabled:cursor-not-allowed disabled:opacity-50',
+          error ? 'border-red-500 focus-visible:ring-red-500' : '',
+          className,
+        )}
         {...rest}
       />
       {helpText && !error ? <span className="text-xs text-gray-500">{helpText}</span> : null}
-      {error ? <span className="text-xs text-red-600">{error}</span> : null}
+      {error ? <span className="text-xs font-medium text-red-600">{error}</span> : null}
     </div>
   );
 }
