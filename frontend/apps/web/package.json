@@ -9,7 +9,8 @@
     "build": "vite build",
     "dev": "vite",
     "preview": "vite preview",
-    "test": "echo 'no tests yet'"
+    "test": "echo 'no tests yet'",
+    "admin-kit:sync": "pnpm dlx shadcn@latest add -y https://marmelab.com/shadcn-admin-kit/r/admin.json"
   },
   "dependencies": {
     "@dar/customization": "workspace:*",
