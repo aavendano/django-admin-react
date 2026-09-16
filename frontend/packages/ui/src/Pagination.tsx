@@ -1,19 +1,27 @@
-// Pagination — generic prev/next pager. Props-driven, no business
-// knowledge (CLAUDE.md §7): the caller owns the page state and supplies
-// the bounds. Extracted from the ListPage god-component (#428).
-
 export interface PaginationProps {
   page: number;
   totalPages: number;
   onChange: (next: number) => void;
-  /**
-   * Optional leading label (e.g. "1,234 objects", #95) shown before the
-   * page indicator, separated by a middot. Omit for a bare pager.
-   */
   countLabel?: string;
-  /** Extra classes for the wrapping `<nav>` so callers can adjust spacing. */
   className?: string;
 }
+
+function pageWindow(page: number, totalPages: number): Array<number | 'ellipsis'> {
+  if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
+
+  const values: Array<number | 'ellipsis'> = [1];
+  const start = Math.max(2, page - 1);
+  const end = Math.min(totalPages - 1, page + 1);
+
+  if (start > 2) values.push('ellipsis');
+  for (let value = start; value <= end; value += 1) values.push(value);
+  if (end < totalPages - 1) values.push('ellipsis');
+  values.push(totalPages);
+  return values;
+}
+
+const CONTROL_CLASS =
+  'inline-flex h-9 min-w-9 items-center justify-center rounded-md px-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 disabled:pointer-events-none disabled:opacity-40';
 
 export function Pagination({
   page,
@@ -24,47 +32,70 @@ export function Pagination({
 }: PaginationProps) {
   const prevDisabled = page <= 1;
   const nextDisabled = page >= totalPages;
-  const buttonClass = (disabled: boolean): string =>
-    // Give the enabled button an explicit border-gray-300 (matching the
-    // Filter/Customize buttons): a bare `border` falls back to Tailwind's
-    // light-gray default, which the dark-mode utility remap can't catch
-    // and shows as a white border in dark mode.
-    `px-3 py-1 rounded border ${
-      disabled
-        ? 'text-gray-300 border-gray-200 cursor-not-allowed'
-        : 'border-gray-300 hover:bg-gray-100'
-    }`;
+  const pages = pageWindow(page, Math.max(totalPages, 1));
+
   return (
-    <nav className={`flex items-center justify-between text-sm text-gray-600 ${className}`}>
+    <nav
+      aria-label="Pagination"
+      className={`flex flex-wrap items-center justify-between gap-3 text-sm text-gray-600 ${className}`}
+    >
       <span>
-        {countLabel != null && (
+        {countLabel != null ? (
           <>
             {countLabel}
-            {/* A vertically-centered middot separates the count from the
-                page indicator (#95) — not a period. */}
             <span aria-hidden className="px-2 text-gray-400">
               ·
             </span>
           </>
-        )}
+        ) : null}
         Page {page} of {totalPages}
       </span>
-      <div className="flex gap-2">
+
+      <div className="flex items-center gap-1">
         <button
           type="button"
-          className={buttonClass(prevDisabled)}
+          className={`${CONTROL_CLASS} hover:bg-gray-100`}
           disabled={prevDisabled}
+          aria-label="Previous page"
           onClick={() => onChange(page - 1)}
         >
-          ← Prev
+          <span aria-hidden>‹</span>
         </button>
+
+        {pages.map((item, index) =>
+          item === 'ellipsis' ? (
+            <span
+              key={`ellipsis-${index}`}
+              aria-hidden
+              className="inline-flex h-9 min-w-9 items-center justify-center text-gray-400"
+            >
+              …
+            </span>
+          ) : (
+            <button
+              key={item}
+              type="button"
+              aria-current={item === page ? 'page' : undefined}
+              className={`${CONTROL_CLASS} ${
+                item === page
+                  ? 'border border-gray-300 bg-gray-100 text-gray-900'
+                  : 'hover:bg-gray-100 hover:text-gray-900'
+              }`}
+              onClick={() => onChange(item)}
+            >
+              {item}
+            </button>
+          ),
+        )}
+
         <button
           type="button"
-          className={buttonClass(nextDisabled)}
+          className={`${CONTROL_CLASS} hover:bg-gray-100`}
           disabled={nextDisabled}
+          aria-label="Next page"
           onClick={() => onChange(page + 1)}
         >
-          Next →
+          <span aria-hidden>›</span>
         </button>
       </div>
     </nav>
