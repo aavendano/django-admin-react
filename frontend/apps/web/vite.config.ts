@@ -12,7 +12,6 @@ export default defineConfig(({ command }) => ({
   base: command === 'build' ? './' : '/',
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
       '@dar/api': path.resolve(__dirname, '../../packages/api/src/index.ts'),
       '@dar/data': path.resolve(__dirname, '../../packages/data/src/index.ts'),
       '@dar/ui': path.resolve(__dirname, '../../packages/ui/src/index.ts'),
