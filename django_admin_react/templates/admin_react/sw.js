@@ -89,6 +89,17 @@ self.addEventListener('fetch', (event) => {
 
 async function handleGet(request, url) {
   const isApi = url.pathname.startsWith(MOUNT + 'api/v1/');
+  const isDynamicSpaRoute =
+    request.mode === 'navigate' ||
+    request.destination === 'document';
+
+  // Authenticated SPA documents are server-rendered per request (CSRF,
+  // permissions, mount metadata). Never put navigations in CacheStorage.
+  // This also avoids racing a cached Response body against the browser.
+  if (isDynamicSpaRoute) {
+    return fetch(request);
+  }
+
   if (isApi) {
     // Network-first; fall back to last-good cache only if one exists.
     // (Per contract, API reads are no-store, so the cache is normally
@@ -116,7 +127,11 @@ async function staleWhileRevalidate(request) {
   const cached = await caches.match(request);
   const network = fetch(request)
     .then((response) => {
-      maybeCache(request, response);
+      // Clone synchronously, before handing the original Response back to
+      // the browser. maybeCache may await caches.open(), by which time the
+      // original response body can already be locked/consumed.
+      const cacheCandidate = response.clone();
+      void maybeCache(request, cacheCandidate);
       return response;
     })
     .catch(() => cached);
@@ -130,7 +145,8 @@ async function maybeCache(request, response) {
   // NO-STORE invariant: never persist a response the server marked
   // no-store (every API read in this package is no-store).
   if (cc.includes('no-store')) return;
+  // The caller passes an already-cloned Response. Do not clone after an
+  // await: the original response may have been consumed by then.
   const cache = await caches.open(SHELL_CACHE);
-  // Clone before the body is consumed by the caller.
-  await cache.put(request, response.clone());
+  await cache.put(request, response);
 }
