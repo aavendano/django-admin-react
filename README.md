@@ -607,6 +607,42 @@ customisations.
 
 ---
 
+### Host your own page inside the SPA (`CUSTOM_PAGES`)
+
+Not everything is a `ModelAdmin`. To put a report, a wizard or a
+file-backed editor *inside* the SPA (sidebar entry, routing, auth and
+theme included), point the shell at an ES module you serve:
+
+```python
+DJANGO_ADMIN_REACT = {
+    "CUSTOM_PAGES": [
+        {
+            "path": "content/articles",          # → /admin-react/content/articles
+            "label": "Articles",
+            "group": "Content",                  # sidebar section (optional)
+            "module": "content/editor.js",       # static file, or "/abs/path.js"
+            "permission": "articles.view_article",  # optional
+        },
+    ],
+}
+```
+
+```js
+// static/content/editor.js
+export function mount(element, context) {
+  // context: { page, mountPoint, navigate(to), csrfToken(), theme(), embedded: true }
+  element.textContent = `Hello from ${context.page.label}`;
+  return () => { /* cleanup on route change */ };
+}
+```
+
+Pages are filtered by `permission` before they reach the browser, modules
+must be same-origin paths (no `https:`/`data:`/`//host` URLs), and the
+module talks to *your* endpoints with the session cookie and
+`X-CSRFToken` — the package adds no API and no permission for it. A
+`path` equal to `<app_label>/<model_name>` of a registered model triggers
+check `W003`; malformed entries trigger `E004` and are never shown.
+
 ## Feature status
 
 All three packages are **Production / Stable** on PyPI. The
