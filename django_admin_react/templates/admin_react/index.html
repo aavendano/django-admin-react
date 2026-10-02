@@ -36,6 +36,12 @@
     {% endcomment %}
     <meta name="dar-language" content="{{ active_language }}" />
     {% comment %}
+      Consumer pages hosted inside the shell (CUSTOM_PAGES): sidebar
+      entries + routes whose content is a same-origin ES module. Inert
+      JSON (``json_script``), already filtered by the user's permissions.
+    {% endcomment %}
+    {% if custom_pages %}{{ custom_pages|json_script:"dar-custom-pages" }}{% endif %}
+    {% comment %}
       The tab <title> uses the AdminSite's site_title (Django's tab-title
       source); the sidebar header reads dar-brand-title (site_header). Both
       collapse to BRAND_TITLE when the consumer set that override (#281).

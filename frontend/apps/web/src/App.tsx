@@ -2,6 +2,7 @@ import { Suspense, lazy } from 'react';
 import { Route, Routes, useParams } from 'react-router-dom';
 
 import { ApiError, useRegistry } from '@dar/data';
+import { readCustomPages } from '@dar/sidebar';
 import { t } from '@dar/ui';
 
 import { ErrorBoundary } from './ErrorBoundary';
@@ -10,6 +11,11 @@ import { HomePage } from './pages/HomePage';
 import { ListPage } from './pages/ListPage';
 import { DetailPage } from './pages/DetailPage';
 import { ToastProvider } from './toast';
+import { CustomPage } from './pages/CustomPage';
+
+// Consumer pages (DJANGO_ADMIN_REACT["CUSTOM_PAGES"]), embedded by the
+// server and fixed for the lifetime of the shell.
+const CUSTOM_PAGES = readCustomPages();
 
 // Route-level code-splitting (#670): the login + create pages aren't on the
 // first authenticated paint — login only renders when the session is dead,
@@ -17,9 +23,7 @@ import { ToastProvider } from './toast';
 // their code out of the main chunk. (Home / List / Detail stay eager: one of
 // them is the very first paint on every load, so splitting them would only
 // add a Suspense flash.)
-const LoginPage = lazy(() =>
-  import('./pages/LoginPage').then((m) => ({ default: m.LoginPage })),
-);
+const LoginPage = lazy(() => import('./pages/LoginPage').then((m) => ({ default: m.LoginPage })));
 const CreatePage = lazy(() =>
   import('./pages/CreatePage').then((m) => ({ default: m.CreatePage })),
 );
@@ -68,6 +72,17 @@ export function App() {
         <ErrorBoundary>
           <Routes>
             <Route path="/" element={<HomePage />} />
+            {/* Static segments outrank the `:appLabel/:modelName` params
+                in React Router's ranking, so a page path never falls
+                through to a model list (the backend also warns when one
+                would shadow a registered model). */}
+            {CUSTOM_PAGES.map((page) => (
+              <Route
+                key={page.path}
+                path={page.path}
+                element={<CustomPage key={page.path} page={page} />}
+              />
+            ))}
             <Route path=":appLabel/:modelName" element={<KeyedListPage />} />
             {/* Literal `add` is ranked above the `:pk` route by React
               Router, so /app/model/add opens the create form, not a
@@ -90,10 +105,7 @@ export function App() {
                 is one Edit-button click away, or a `?edit=1` deep link.
                 Trailing slashes are normalised by React Router v6 (no
                 extra route needed for "<pk>/change/" vs "<pk>/change"). */}
-            <Route
-              path=":appLabel/:modelName/:pk/change"
-              element={<DetailPage />}
-            />
+            <Route path=":appLabel/:modelName/:pk/change" element={<DetailPage />} />
             <Route
               path=":appLabel/:modelName/:pk/history"
               element={<DetailPage initialHistoryOpen />}

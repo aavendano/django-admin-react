@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **`DJANGO_ADMIN_REACT["CUSTOM_PAGES"]` — host consumer pages inside the SPA
+  shell.** For screens that are not a `ModelAdmin` (a report, a file-backed
+  editor, …): each entry (`path`, `label`, optional `group`, `module`,
+  optional `permission`) becomes a sidebar link and a client-side route whose
+  content is a same-origin ES module exporting `mount(element, context)`.
+  The shell embeds the permission-filtered list as inert JSON
+  (`json_script`), loads modules with a native dynamic `import()` (strict
+  `script-src 'self'` CSP keeps working) and runs the module's cleanup on
+  route change. System checks: `E004` (invalid / duplicate entry), `W003`
+  (a page path shadows a registered model's list route). The package adds
+  no endpoint and no permission for these pages.
+
 ## [1.13.0] — 2026-06-03
 
 ### Changed
