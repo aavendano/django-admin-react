@@ -145,6 +145,25 @@ DEFAULTS: dict[str, Any] = {
     "PWA_NAME": None,
     "PWA_SHORT_NAME": None,
     "PWA_ICONS": None,
+    # ``CUSTOM_PAGES`` — consumer-provided pages rendered *inside* the SPA
+    # shell (sidebar entry + client-side route), for screens that are not
+    # a ``ModelAdmin`` (a report, a file-backed editor, …). Each entry::
+    #
+    #     {
+    #         "path": "content/articles",        # route under the mount
+    #         "label": "Articles",               # sidebar text
+    #         "group": "Content",                # optional sidebar section
+    #         "module": "content/articles.js",   # ES module (static path or
+    #                                            #   same-origin absolute URL)
+    #         "permission": "app.view_thing",    # optional; hidden otherwise
+    #     }
+    #
+    # The module must export ``mount(element, context)`` and may return a
+    # cleanup function. It is loaded with a native dynamic ``import()``
+    # from the same origin (no inline script, CSP-friendly). The package
+    # adds no API and no permissions: the page talks to the consumer's
+    # own endpoints with the session cookie + ``X-CSRFToken``.
+    "CUSTOM_PAGES": (),
 }
 
 
@@ -173,6 +192,7 @@ class _PackageSettings:
     PWA_NAME: str | None = DEFAULTS["PWA_NAME"]
     PWA_SHORT_NAME: str | None = DEFAULTS["PWA_SHORT_NAME"]
     PWA_ICONS: list[dict[str, str]] | None = DEFAULTS["PWA_ICONS"]
+    CUSTOM_PAGES: Any = DEFAULTS["CUSTOM_PAGES"]
 
 
 def _load() -> _PackageSettings:

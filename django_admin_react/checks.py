@@ -38,6 +38,8 @@ ID_ADMIN_SITE_IMPORT = "django_admin_react.E002"
 ID_UNKNOWN_SETTINGS = "django_admin_react.E003"
 ID_API_PREFIX_MOUNT = "django_admin_react.W001"
 ID_BUNDLE_MISSING = "django_admin_react.W002"
+ID_CUSTOM_PAGES = "django_admin_react.E004"
+ID_CUSTOM_PAGE_SHADOWS_MODEL = "django_admin_react.W003"
 
 
 def check_django_admin_react(app_configs: Any, **kwargs: Any) -> list[Any]:
@@ -54,6 +56,7 @@ def check_django_admin_react(app_configs: Any, **kwargs: Any) -> list[Any]:
     errors.extend(_check_settings_keys())
     errors.extend(_check_api_prefix_coherence())
     errors.extend(_check_bundle_built())
+    errors.extend(_check_custom_pages())
     return errors
 
 
@@ -159,3 +162,56 @@ def _check_bundle_built() -> list[Any]:
             id=ID_BUNDLE_MISSING,
         )
     ]
+
+def _check_custom_pages() -> list[Any]:
+    """Validate ``CUSTOM_PAGES`` entries (shape, path, same-origin module)
+    and warn when a page path shadows a registered model's list route."""
+    from django.conf import settings as django_settings
+
+    from django_admin_react.custom_pages import entry_errors
+
+    overrides = getattr(django_settings, "DJANGO_ADMIN_REACT", {}) or {}
+    raw = overrides.get("CUSTOM_PAGES", ())
+    if not isinstance(raw, (list, tuple)):
+        return [
+            Error(
+                "DJANGO_ADMIN_REACT['CUSTOM_PAGES'] must be a list of dicts.",
+                id=ID_CUSTOM_PAGES,
+            )
+        ]
+    messages: list[Any] = []
+    seen: set[str] = set()
+    for index, entry in enumerate(raw):
+        problems = entry_errors(entry)
+        path = entry.get("path") if isinstance(entry, dict) else None
+        if path in seen:
+            problems.append(f"duplicate path {path!r}")
+        if path:
+            seen.add(path)
+        for problem in problems:
+            messages.append(
+                Error(
+                    f"DJANGO_ADMIN_REACT['CUSTOM_PAGES'][{index}]: {problem}.",
+                    hint="Invalid entries are not shown in the SPA.",
+                    id=ID_CUSTOM_PAGES,
+                )
+            )
+    try:
+        from django_admin_rest_api.api.registry import get_admin_site
+
+        registered = {
+            f"{model._meta.app_label}/{model._meta.model_name}"
+            for model in get_admin_site()._registry
+        }
+    except Exception:  # noqa: BLE001 — reported by the admin-site check
+        registered = set()
+    for path in sorted(seen & registered):
+        messages.append(
+            CheckWarning(
+                f"DJANGO_ADMIN_REACT['CUSTOM_PAGES'] path {path!r} shadows the "
+                "list page of a registered model.",
+                hint="Pick a path that is not '<app_label>/<model_name>'.",
+                id=ID_CUSTOM_PAGE_SHADOWS_MODEL,
+            )
+        )
+    return messages

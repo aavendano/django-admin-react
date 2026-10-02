@@ -13,6 +13,8 @@ import { useRegistry } from '@dar/data';
 import { AccountMenu } from '@dar/settings';
 import { Popover } from '@dar/ui';
 
+import { groupCustomPages, readCustomPages } from './customPages';
+
 // The browser's `beforeinstallprompt` event (Chromium). Captured so we
 // can show an explicit "Install" affordance and call `.prompt()` on
 // click — the manifest + SW (#86) make the app installable; this
@@ -115,6 +117,9 @@ function filterApps(apps: RegistryApp[], query: string): RegistryApp[] {
   }
   return out;
 }
+
+// Read once: the embedded list is fixed for the lifetime of the shell.
+const CUSTOM_PAGE_GROUPS = groupCustomPages(readCustomPages());
 
 export function Sidebar() {
   const { data } = useRegistry();
@@ -296,6 +301,52 @@ export function Sidebar() {
             indistinguishable from the `gray-900` sidebar surface) so the
             line is actually visible (#556). */}
         <nav className="border-t border-gray-700 divide-y divide-gray-700">
+          {/* Consumer pages (CUSTOM_PAGES) first: they are hand-picked
+              entry points, not part of the model registry, so the model
+              filter does not apply to them. */}
+          {CUSTOM_PAGE_GROUPS.map(([group, pages]) => {
+            const key = `custom:${group}`;
+            const isCollapsed = collapsed.has(key);
+            return (
+              <div key={key} className="py-3">
+                <button
+                  type="button"
+                  onClick={() => toggleApp(key)}
+                  aria-expanded={!isCollapsed}
+                  className="mb-1 flex w-full items-center justify-between gap-1 text-xs uppercase tracking-wide text-gray-400 hover:text-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400"
+                >
+                  <span className="truncate">{group}</span>
+                  <ChevronDown
+                    className={`h-3 w-3 shrink-0 transition-transform ${
+                      isCollapsed ? '-rotate-90' : ''
+                    }`}
+                    aria-hidden
+                  />
+                </button>
+                {!isCollapsed && (
+                  <ul className="space-y-1">
+                    {pages.map((page) => (
+                      <li key={page.path}>
+                        <NavLink
+                          to={`/${page.path}`}
+                          onClick={closeDrawer}
+                          className={({ isActive }) =>
+                            [
+                              'block rounded px-2 py-1 text-sm',
+                              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-gray-400',
+                              isActive ? 'bg-gray-800 font-medium text-white' : 'hover:bg-gray-800',
+                            ].join(' ')
+                          }
+                        >
+                          {page.label}
+                        </NavLink>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            );
+          })}
           {visibleApps.map((app) => {
             // While a filter query is active, force every group open so
             // matches are never hidden behind a collapsed section.
@@ -360,7 +411,6 @@ export function Sidebar() {
           )}
         </nav>
       </aside>
-
     </>
   );
 }

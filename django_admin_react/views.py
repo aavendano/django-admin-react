@@ -57,6 +57,7 @@ from django_admin_rest_api.api.permissions import is_admin_user
 from django_admin_rest_api.api.registry import get_admin_site
 
 from django_admin_react import conf as dar_conf
+from django_admin_react import custom_pages
 
 if TYPE_CHECKING:
     # Type-only import: the package must keep working with
@@ -133,6 +134,10 @@ class SpaIndexView(View):
                 # language, matching what the API package already
                 # surfaces for ``verbose_name`` / ``help_text``.
                 "active_language": _resolve_active_language(),
+                # Consumer pages hosted inside the shell (CUSTOM_PAGES),
+                # filtered to what this user may see. Rendered with
+                # ``json_script`` (inert JSON, no inline JS).
+                "custom_pages": custom_pages.pages_for_request(request, dar_conf.CUSTOM_PAGES),
             },
         )
         # The SPA shell must never be cached: it references the

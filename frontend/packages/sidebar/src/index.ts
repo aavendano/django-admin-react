@@ -3,3 +3,4 @@
 // brand, per-user actions, model filter, nav) is self-contained here.
 
 export { Sidebar } from './Sidebar';
+export { groupCustomPages, readCustomPages, type CustomPage } from './customPages';
