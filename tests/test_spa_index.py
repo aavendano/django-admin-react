@@ -478,12 +478,12 @@ def test_brand_title_explicit_override_wins(superuser_client: Client) -> None:
 
 @pytest.mark.django_db
 def test_primary_color_default_injected(superuser_client: Client) -> None:
-    """The accent color is injected as the `--dar-primary` CSS variable;
-    the default is blue-600 (#437)."""
+    """Default accent aliases the build-time DS primary token (#437)."""
     with override_settings(DJANGO_ADMIN_REACT={}):
         _reload_conf()
         html = superuser_client.get(ROOT_URL).content.decode("utf-8")
-        assert "--dar-primary: #2563eb;" in html
+        assert "--dar-primary: var(--plt-color-primary);" in html
+        assert "#2563eb" not in html
 
 
 @pytest.mark.django_db
@@ -498,13 +498,13 @@ def test_primary_color_valid_hex_override(superuser_client: Client) -> None:
 @pytest.mark.django_db
 def test_primary_color_non_hex_value_cannot_inject_css(superuser_client: Client) -> None:
     """A non-hex `PRIMARY_COLOR` can't break out of the `<style>` block —
-    it's rejected and the default is used, so no CSS injection (#437)."""
+    it's rejected and the DS token default is used (#437)."""
     evil = "red; } body { display: none } :root {"
     with override_settings(DJANGO_ADMIN_REACT={"PRIMARY_COLOR": evil}):
         _reload_conf()
         html = superuser_client.get(ROOT_URL).content.decode("utf-8")
         assert "display: none" not in html
-        assert "--dar-primary: #2563eb;" in html
+        assert "--dar-primary: var(--plt-color-primary);" in html
 
 
 @pytest.mark.django_db
@@ -558,7 +558,7 @@ def test_primary_color_admin_site_non_hex_is_rejected(superuser_client: Client) 
         try:
             html = superuser_client.get(ROOT_URL).content.decode("utf-8")
             assert "display: none" not in html
-            assert "--dar-primary: #2563eb;" in html
+            assert "--dar-primary: var(--plt-color-primary);" in html
         finally:
             if original is None:
                 del default_admin_site.site_primary_color

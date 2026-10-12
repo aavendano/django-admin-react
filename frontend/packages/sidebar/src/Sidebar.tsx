@@ -172,13 +172,13 @@ export function Sidebar() {
     <>
       {/* Top bar — hamburger + brand. Shown on mobile AND tablet; the
           static sidebar only appears at lg (≥1024px). */}
-      <header className="lg:hidden fixed inset-x-0 top-0 z-30 flex h-14 items-center gap-3 bg-gray-900 px-4 text-gray-100">
+      <header className="lg:hidden fixed inset-x-0 top-0 z-30 flex h-14 items-center gap-3 bg-neutral px-4 text-neutral-content">
         <button
           type="button"
           aria-label="Open navigation"
           aria-expanded={drawerOpen}
           onClick={() => setDrawerOpen(true)}
-          className="-ml-2 rounded p-2 hover:bg-gray-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400"
+          className="-ml-2 rounded p-2 hover:bg-neutral/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-base-content/40"
         >
           <Menu className="h-5 w-5" aria-hidden />
         </button>
@@ -201,7 +201,7 @@ export function Sidebar() {
           drawer on mobile AND tablet (< lg). */}
       <aside
         className={[
-          'w-64 shrink-0 overflow-y-auto bg-gray-900 p-4 text-gray-100',
+          'w-64 shrink-0 overflow-y-auto bg-neutral p-4 text-neutral-content',
           // Mobile + tablet: fixed off-canvas drawer that slides in.
           'fixed inset-y-0 left-0 z-50 transform transition-transform duration-200',
           drawerOpen ? 'translate-x-0' : '-translate-x-full',
@@ -213,7 +213,7 @@ export function Sidebar() {
           <Link
             to="/"
             onClick={closeDrawer}
-            className="flex items-center gap-2 text-lg font-semibold hover:text-white"
+            className="flex items-center gap-2 text-lg font-semibold hover:text-neutral-content"
           >
             {BRAND_LOGO_URL && (
               <img src={BRAND_LOGO_URL} alt="" className="h-6 w-6 shrink-0 rounded" />
@@ -232,7 +232,7 @@ export function Sidebar() {
                 open={accountOpen}
                 onClose={() => setAccountOpen(false)}
                 align="left"
-                panelClassName="text-gray-700"
+                panelClassName="text-base-content/80"
                 trigger={
                   <button
                     type="button"
@@ -240,7 +240,7 @@ export function Sidebar() {
                     aria-haspopup="menu"
                     aria-expanded={accountOpen}
                     title={data.user.display_name}
-                    className="inline-flex max-w-full items-center gap-1.5 rounded bg-gray-800 px-2 py-1 text-xs text-gray-200 hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400"
+                    className="inline-flex max-w-full items-center gap-1.5 rounded bg-neutral/80 px-2 py-1 text-xs text-neutral-content/80 hover:bg-neutral/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-base-content/40"
                   >
                     <span className="truncate">{data.user.display_name}</span>
                     <ChevronDown
@@ -262,7 +262,7 @@ export function Sidebar() {
                 <button
                   type="button"
                   onClick={promptInstall}
-                  className="inline-flex items-center gap-1.5 rounded bg-gray-800 px-2 py-1 text-xs text-gray-200 hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400"
+                  className="inline-flex items-center gap-1.5 rounded bg-neutral/80 px-2 py-1 text-xs text-neutral-content/80 hover:bg-neutral/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-base-content/40"
                 >
                   <Download className="h-3.5 w-3.5" aria-hidden />
                   Install app
@@ -283,11 +283,11 @@ export function Sidebar() {
               }}
               placeholder="Filter models…"
               aria-label="Filter models"
-              // Bumped one step lighter than the sidebar surface (bg-gray-900)
+              // Bumped one step lighter than the sidebar surface (bg-neutral)
               // so the input reads as a distinct field, not as part of the
-              // sidebar (#556). `bg-gray-700` + `border-gray-600` gives the
+              // sidebar (#556). `bg-neutral/70` + `border-neutral-content/20` gives the
               // same two-step contrast the rest of the app's inputs have.
-              className="w-full rounded border border-gray-600 bg-gray-700 px-2 py-1 text-sm text-gray-100 placeholder-gray-400 focus:outline-none focus-visible:ring-1 focus-visible:ring-gray-500"
+              className="w-full rounded border border-neutral-content/20 bg-neutral/70 px-2 py-1 text-sm text-neutral-content placeholder-neutral-content/50 focus:outline-none focus-visible:ring-1 focus-visible:ring-base-content/40"
             />
           </div>
         )}
@@ -300,7 +300,7 @@ export function Sidebar() {
             rest. `gray-700` (one step lighter than `gray-800`, which was
             indistinguishable from the `gray-900` sidebar surface) so the
             line is actually visible (#556). */}
-        <nav className="border-t border-gray-700 divide-y divide-gray-700">
+        <nav className="border-t border-neutral-content/15 divide-y divide-neutral-content/15">
           {/* Consumer pages (CUSTOM_PAGES) first: they are hand-picked
               entry points, not part of the model registry, so the model
               filter does not apply to them. */}
@@ -313,7 +313,7 @@ export function Sidebar() {
                   type="button"
                   onClick={() => toggleApp(key)}
                   aria-expanded={!isCollapsed}
-                  className="mb-1 flex w-full items-center justify-between gap-1 text-xs uppercase tracking-wide text-gray-400 hover:text-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400"
+                  className="mb-1 flex w-full items-center justify-between gap-1 text-xs uppercase tracking-wide text-base-content/50 hover:text-neutral-content/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-base-content/40"
                 >
                   <span className="truncate">{group}</span>
                   <ChevronDown
@@ -333,8 +333,8 @@ export function Sidebar() {
                           className={({ isActive }) =>
                             [
                               'block rounded px-2 py-1 text-sm',
-                              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-gray-400',
-                              isActive ? 'bg-gray-800 font-medium text-white' : 'hover:bg-gray-800',
+                              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-base-content/40',
+                              isActive ? 'bg-neutral/80 font-medium text-primary-content' : 'hover:bg-neutral/80',
                             ].join(' ')
                           }
                         >
@@ -357,7 +357,7 @@ export function Sidebar() {
                   type="button"
                   onClick={() => toggleApp(app.app_label)}
                   aria-expanded={!isCollapsed}
-                  className="mb-1 flex w-full items-center justify-between gap-1 text-xs uppercase tracking-wide text-gray-400 hover:text-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400"
+                  className="mb-1 flex w-full items-center justify-between gap-1 text-xs uppercase tracking-wide text-base-content/50 hover:text-neutral-content/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-base-content/40"
                 >
                   <span className="truncate">{app.verbose_name}</span>
                   <ChevronDown
@@ -389,10 +389,10 @@ export function Sidebar() {
                             className={({ isActive }) =>
                               [
                                 'block rounded px-2 py-1 text-sm',
-                                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-gray-400',
+                                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-base-content/40',
                                 isActive
-                                  ? 'bg-gray-800 font-medium text-white'
-                                  : 'hover:bg-gray-800',
+                                  ? 'bg-neutral/80 font-medium text-primary-content'
+                                  : 'hover:bg-neutral/80',
                               ].join(' ')
                             }
                           >
@@ -407,7 +407,7 @@ export function Sidebar() {
             );
           })}
           {showFilter && visibleApps.length === 0 && (
-            <div className="px-2 text-sm text-gray-500">No models match “{query}”.</div>
+            <div className="px-2 text-sm text-base-content/60">No models match “{query}”.</div>
           )}
         </nav>
       </aside>

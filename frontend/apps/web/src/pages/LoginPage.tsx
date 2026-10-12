@@ -56,10 +56,10 @@ export function LoginPage({ onSuccess, brandTitle }: LoginPageProps) {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-base-200 px-4">
       <Card className="w-full max-w-sm">
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-2">
-          <h1 className="text-center text-lg font-semibold text-gray-900">
+          <h1 className="text-center text-lg font-semibold text-base-content">
             {brandTitle ?? 'Sign in'}
           </h1>
           <Input

@@ -208,7 +208,7 @@ function Pane({
   const titleId = useId();
   return (
     <div className="flex flex-col gap-1.5">
-      <div id={titleId} className="text-sm font-medium text-gray-700">
+      <div id={titleId} className="text-sm font-medium text-base-content/80">
         {title}
       </div>
       <label htmlFor={searchId} className="sr-only">
@@ -220,15 +220,15 @@ function Pane({
         value={filter}
         onChange={(e) => setFilter(e.target.value)}
         placeholder={t('Filter')}
-        className="w-full rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-gray-500"
+        className="w-full rounded border border-base-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-base-content/40"
       />
       <ul
         role="listbox"
         aria-labelledby={titleId}
-        className="h-48 overflow-y-auto rounded border border-gray-300 bg-white"
+        className="h-48 overflow-y-auto rounded border border-base-300 bg-base-100"
       >
         {items.length === 0 ? (
-          <li className="px-2 py-1.5 text-sm italic text-gray-500">{emptyMessage}</li>
+          <li className="px-2 py-1.5 text-sm italic text-base-content/60">{emptyMessage}</li>
         ) : (
           items.map((c) => (
             <li
@@ -243,7 +243,7 @@ function Pane({
                   onItemActivate(c);
                 }
               }}
-              className="cursor-pointer px-2 py-1 text-sm hover:bg-gray-50 focus:bg-gray-100 focus:outline-none"
+              className="cursor-pointer px-2 py-1 text-sm hover:bg-base-200 focus:bg-base-200 focus:outline-none"
             >
               {c.label}
             </li>
@@ -254,7 +254,7 @@ function Pane({
         type="button"
         onClick={onAction}
         disabled={items.length === 0}
-        className="self-start text-xs text-gray-600 hover:text-gray-900 disabled:cursor-not-allowed disabled:text-gray-400"
+        className="self-start text-xs text-base-content/70 hover:text-base-content disabled:cursor-not-allowed disabled:text-base-content/50"
       >
         {actionLabel}
       </button>

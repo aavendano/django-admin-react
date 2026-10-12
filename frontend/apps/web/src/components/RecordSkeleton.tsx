@@ -25,7 +25,7 @@ export function RecordSkeleton({ sections = 2, rows = 4 }: RecordSkeletonProps) 
       </div>
       {Array.from({ length: sections }).map((_, s) => (
         <Card key={s}>
-          <div className="divide-y divide-gray-100">
+          <div className="divide-y divide-base-300">
             {Array.from({ length: rows }).map((__, r) => (
               <div key={r} className="grid grid-cols-3 gap-4 py-3">
                 <Skeleton className="h-4 w-24" />

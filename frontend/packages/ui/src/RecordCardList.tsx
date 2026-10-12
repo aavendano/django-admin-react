@@ -52,7 +52,7 @@ export function RecordCardList<Row>({
   // Only fall back to the empty-state when genuinely idle-and-empty — not
   // mid-fetch, where skeleton cards are shown instead (matches `<Table>`).
   if (!loading && rows.length === 0) {
-    return <div className="py-8 text-center text-sm text-gray-500">{emptyLabel}</div>;
+    return <div className="py-8 text-center text-sm text-base-content/60">{emptyLabel}</div>;
   }
 
   const selected = selectedKeys ?? new Set<string | number>();
@@ -75,7 +75,7 @@ export function RecordCardList<Row>({
     return (
       <ul className="space-y-2" aria-busy="true">
         {Array.from({ length: skeletonCount }).map((_, i) => (
-          <li key={`dar-card-skeleton-${i}`} className="rounded-lg border border-gray-300 bg-white p-4">
+          <li key={`dar-card-skeleton-${i}`} className="rounded-lg border border-base-300 bg-base-100 p-4">
             <Skeleton className="mb-3 h-5 w-1/3" />
             <div className="space-y-2">
               {Array.from({ length: Math.max(detailCols.length, 2) }).map((__, j) => (
@@ -108,12 +108,12 @@ export function RecordCardList<Row>({
                   }
                 : undefined
             }
-            className={`rounded-lg border bg-white p-4 ${
-              isSelected ? 'border-primary' : 'border-gray-300'
-            } ${cardNav ? 'cursor-pointer hover:bg-gray-50' : ''}`}
+            className={`rounded-lg border bg-base-100 p-4 ${
+              isSelected ? 'border-primary' : 'border-base-300'
+            } ${cardNav ? 'cursor-pointer hover:bg-base-200' : ''}`}
           >
             <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0 flex-1 font-medium text-gray-900">
+              <div className="min-w-0 flex-1 font-medium text-base-content">
                 {titleLinks && titleCol && rowHref ? (
                   // Real anchor so native open-in-new-tab works; a plain
                   // left-click is intercepted for in-app nav (#253).
@@ -149,8 +149,8 @@ export function RecordCardList<Row>({
               <dl className="mt-3 space-y-2 text-sm">
                 {detailCols.map((col) => (
                   <div key={col.key}>
-                    <dt className="text-xs uppercase tracking-wide text-gray-500">{col.header}</dt>
-                    <dd className="mt-0.5 text-gray-700">{col.render(row)}</dd>
+                    <dt className="text-xs uppercase tracking-wide text-base-content/60">{col.header}</dt>
+                    <dd className="mt-0.5 text-base-content/80">{col.render(row)}</dd>
                   </div>
                 ))}
               </dl>

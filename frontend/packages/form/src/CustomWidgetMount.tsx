@@ -79,7 +79,7 @@ export function CustomWidgetMount({
     <div
       ref={ref}
       data-custom-widget-class={widgetClass}
-      className="rounded border border-gray-300 p-2"
+      className="rounded border border-base-300 p-2"
     />
   );
 }

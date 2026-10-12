@@ -32,7 +32,7 @@ export function CustomViewsMenu({ views }: { views: CustomView[] }) {
   }, [open]);
 
   const linkClass =
-    'flex items-center gap-1.5 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 whitespace-nowrap';
+    'flex items-center gap-1.5 px-3 py-2 text-sm text-base-content/80 hover:bg-base-200 whitespace-nowrap';
 
   // Single view → render it inline as one button (no need for a menu).
   if (views.length === 1) {
@@ -42,7 +42,7 @@ export function CustomViewsMenu({ views }: { views: CustomView[] }) {
         href={v.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-1.5 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+        className="inline-flex items-center gap-1.5 rounded-md border border-base-300 bg-base-100 px-3 py-2 text-sm font-medium text-base-content/80 hover:bg-base-200"
       >
         <ExternalLink className="h-4 w-4" aria-hidden /> {v.label}
       </a>
@@ -56,7 +56,7 @@ export function CustomViewsMenu({ views }: { views: CustomView[] }) {
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-haspopup="menu"
-        className="inline-flex items-center gap-1.5 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+        className="inline-flex items-center gap-1.5 rounded-md border border-base-300 bg-base-100 px-3 py-2 text-sm font-medium text-base-content/80 hover:bg-base-200"
       >
         More
         <ChevronDown
@@ -67,7 +67,7 @@ export function CustomViewsMenu({ views }: { views: CustomView[] }) {
       {open && (
         <div
           role="menu"
-          className="absolute right-0 z-10 mt-1 min-w-[12rem] overflow-hidden rounded-md border border-gray-200 bg-white py-1 shadow-lg"
+          className="absolute right-0 z-10 mt-1 min-w-[12rem] overflow-hidden rounded-md border border-base-300 bg-base-100 py-1 shadow-lg"
         >
           {views.map((v) => (
             <a

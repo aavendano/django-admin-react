@@ -205,7 +205,7 @@ export function Table<Row>({
   // Only fall back to the empty-state when we're genuinely empty — not
   // while a fetch is in flight, where we'd rather show skeleton rows.
   if (!loading && rows.length === 0) {
-    return <div className="py-8 text-center text-sm text-gray-500">{emptyLabel}</div>;
+    return <div className="py-8 text-center text-sm text-base-content/60">{emptyLabel}</div>;
   }
   const selected = selectedKeys ?? new Set<string | number>();
   const allSelected = !loading && rows.length > 0 && rows.every((r) => selected.has(rowKey(r)));
@@ -243,21 +243,21 @@ export function Table<Row>({
   // Helpers to build the sticky `<th>` / `<td>` style + className.
   // `style.left` is set so the browser knows where to pin during
   // horizontal scroll; the cell needs a background colour so content
-  // scrolling underneath doesn't bleed through (bg-white is in the
+  // scrolling underneath doesn't bleed through (bg-base-100 is in the
   // .dark remap, so dark mode is covered).
   function stickyStyle(key: string): { left: number; position: 'sticky' } | undefined {
     const left = stickyLefts[key];
     if (left === undefined) return undefined;
     return { left, position: 'sticky' };
   }
-  function stickyClass(key: string, base = 'bg-white'): string {
+  function stickyClass(key: string, base = 'bg-base-100'): string {
     return stickyLefts[key] === undefined
       ? ''
       : `${base} z-10 ${key === lastStickyKey ? 'shadow-[2px_0_0_-1px_rgba(0,0,0,0.06)]' : ''}`;
   }
   // Body-cell sticky background tracks the row's :hover / selection
   // state via the `--dar-row-bg` custom property (apps/web/src/index.css
-  // #613). Header cells stay `bg-gray-50` — header has no hover and
+  // #613). Header cells stay `bg-base-200` — header has no hover and
   // selection doesn't propagate up to <thead>, so the simpler
   // `stickyClass` flow is fine there.
   function stickyBodyClass(key: string): string {
@@ -300,13 +300,13 @@ export function Table<Row>({
             ))}
           </colgroup>
         )}
-        <thead className="bg-gray-50 text-gray-700">
+        <thead className="bg-base-200 text-base-content/80">
           <tr>
             {selectable && (
               <th
                 ref={checkboxHeaderRef}
                 scope="col"
-                className={`w-10 px-4 py-2 ${stickyClass('__select', 'bg-gray-50')}`}
+                className={`w-10 px-4 py-2 ${stickyClass('__select', 'bg-base-200')}`}
                 style={stickyStyle('__select')}
               >
                 <Checkbox
@@ -319,7 +319,7 @@ export function Table<Row>({
             {columns.map((col) => {
               const align = ALIGN_CLASSES[col.align ?? 'left'];
               const sortable = col.sortable && onSort;
-              const stickyCls = col.sticky ? stickyClass(col.key, 'bg-gray-50') : '';
+              const stickyCls = col.sticky ? stickyClass(col.key, 'bg-base-200') : '';
               return (
                 <th
                   key={col.key}
@@ -345,7 +345,7 @@ export function Table<Row>({
                   }
                   tabIndex={sortable ? 0 : undefined}
                   style={col.sticky ? stickyStyle(col.key) : undefined}
-                  className={`group relative ${hasWidths ? 'overflow-hidden' : 'whitespace-nowrap'} px-4 py-2 font-medium ${align} ${stickyCls} ${sortable ? 'cursor-pointer hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500' : ''}`}
+                  className={`group relative ${hasWidths ? 'overflow-hidden' : 'whitespace-nowrap'} px-4 py-2 font-medium ${align} ${stickyCls} ${sortable ? 'cursor-pointer hover:bg-base-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary' : ''}`}
                   onClick={sortable ? () => onSort(col.key) : undefined}
                   onKeyDown={
                     sortable
@@ -369,7 +369,7 @@ export function Table<Row>({
                         // hover so the operator sees the column is clickable.
                         <span
                           aria-hidden
-                          className="text-gray-400 opacity-0 transition-opacity group-hover:opacity-100"
+                          className="text-base-content/50 opacity-0 transition-opacity group-hover:opacity-100"
                         >
                           ▲
                         </span>
@@ -385,7 +385,7 @@ export function Table<Row>({
                       aria-label={`Resize column`}
                       onMouseDown={(e) => startResize(col.key, e)}
                       onClick={(e) => e.stopPropagation()}
-                      className="absolute right-0 top-0 z-10 h-full w-1.5 cursor-col-resize select-none hover:bg-blue-400/60"
+                      className="absolute right-0 top-0 z-10 h-full w-1.5 cursor-col-resize select-none hover:bg-primary/60"
                     />
                   )}
                 </th>
@@ -393,7 +393,7 @@ export function Table<Row>({
             })}
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100 bg-white">
+        <tbody className="divide-y divide-base-300 bg-base-100">
           {loading
             ? Array.from({ length: skeletonCount }).map((_, i) => (
                 <tr key={`dar-skeleton-${i}`}>
@@ -439,7 +439,7 @@ export function Table<Row>({
                           }
                         : undefined
                     }
-                    className={rowClickActive ? 'cursor-pointer hover:bg-gray-50' : ''}
+                    className={rowClickActive ? 'cursor-pointer hover:bg-base-200' : ''}
                   >
                     {selectable && (
                       <td

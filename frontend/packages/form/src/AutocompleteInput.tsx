@@ -86,7 +86,7 @@ export function AutocompleteInput({
 
   const base = useMemo(
     () =>
-      'w-full rounded border px-2 py-1 text-sm ' + (invalid ? 'border-red-400' : 'border-gray-300'),
+      'w-full rounded border px-2 py-1 text-sm ' + (invalid ? 'border-error/50' : 'border-base-300'),
     [invalid],
   );
 
@@ -100,8 +100,8 @@ export function AutocompleteInput({
       <div className="flex items-center gap-2">
         <a
           href={href}
-          className={`inline-flex items-center rounded border bg-gray-50 px-2 py-1 text-sm text-primary hover:bg-gray-100 hover:underline ${
-            invalid ? 'border-red-400' : 'border-gray-300'
+          className={`inline-flex items-center rounded border bg-base-200 px-2 py-1 text-sm text-primary hover:bg-base-200 hover:underline ${
+            invalid ? 'border-error/50' : 'border-base-300'
           }`}
         >
           {selectedLabel ?? String(value)}
@@ -110,7 +110,7 @@ export function AutocompleteInput({
           type="button"
           aria-label="Change"
           title="Change"
-          className="inline-flex shrink-0 items-center justify-center rounded p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+          className="inline-flex shrink-0 items-center justify-center rounded p-1.5 text-base-content/60 hover:bg-base-200 hover:text-base-content"
           onClick={() => {
             setEditing(true);
             setOpen(true);
@@ -147,7 +147,7 @@ export function AutocompleteInput({
           <>
             <button
               type="button"
-              className="shrink-0 rounded px-2 py-1 text-sm text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+              className="shrink-0 rounded px-2 py-1 text-sm text-base-content/60 hover:bg-base-200 hover:text-base-content"
               onClick={() => {
                 // Empty an optional FK; stay in edit mode so the user can
                 // pick a replacement or leave it blank.
@@ -160,7 +160,7 @@ export function AutocompleteInput({
             </button>
             <button
               type="button"
-              className="shrink-0 rounded px-2 py-1 text-sm text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+              className="shrink-0 rounded px-2 py-1 text-sm text-base-content/60 hover:bg-base-200 hover:text-base-content"
               onClick={cancelEdit}
             >
               Cancel
@@ -169,16 +169,16 @@ export function AutocompleteInput({
         )}
       </div>
       {open && (query.length > 0 || results.length > 0) && (
-        <div className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded border border-gray-200 bg-white py-1 shadow-lg">
-          {loading && <div className="px-3 py-2 text-xs text-gray-400">Searching…</div>}
+        <div className="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded border border-base-300 bg-base-100 py-1 shadow-lg">
+          {loading && <div className="px-3 py-2 text-xs text-base-content/50">Searching…</div>}
           {!loading && results.length === 0 && (
-            <div className="px-3 py-2 text-xs text-gray-400">No matches.</div>
+            <div className="px-3 py-2 text-xs text-base-content/50">No matches.</div>
           )}
           {results.map((r) => (
             <button
               key={String(r.id)}
               type="button"
-              className="block w-full px-3 py-1.5 text-left text-sm hover:bg-gray-100"
+              className="block w-full px-3 py-1.5 text-left text-sm hover:bg-base-200"
               onClick={() => {
                 onChange(r.id);
                 setSelectedLabel(r.label);

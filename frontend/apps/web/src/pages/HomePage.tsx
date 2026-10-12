@@ -66,7 +66,7 @@ export function HomePage() {
     <div className="space-y-8">
       <header>
         <h1 className="text-2xl font-semibold">Welcome</h1>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-base-content/60">
           Choose a model from the sidebar or click a card below.
         </p>
       </header>
@@ -74,7 +74,7 @@ export function HomePage() {
       {/* Pinned models (#407) surface at the top for quick access. */}
       {pinnedModels.length > 0 && (
         <section>
-          <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-500">
+          <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-base-content/60">
             Pinned
           </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -95,7 +95,7 @@ export function HomePage() {
           Django admin's grouped index instead of a flat card soup. */}
       {data.apps.map((app) => (
         <section key={app.app_label}>
-          <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-500">
+          <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-base-content/60">
             {app.verbose_name}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -134,19 +134,19 @@ function ModelCard({
     <div className="relative">
       <Link to={`/${routeApp}/${model.model_name}`} className="block hover:no-underline">
         <Card title={capitalize(model.verbose_name_plural || model.model_name)}>
-          <div className="text-xs text-gray-500">{model.object_name}</div>
+          <div className="text-xs text-base-content/60">{model.object_name}</div>
           <div className="mt-2 flex gap-2 text-xs">
             {model.permissions.view ? (
-              <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700">view</span>
+              <span className="px-2 py-0.5 rounded bg-primary/10 text-primary">view</span>
             ) : null}
             {model.permissions.add ? (
-              <span className="px-2 py-0.5 rounded bg-green-50 text-green-700">add</span>
+              <span className="px-2 py-0.5 rounded bg-success/10 text-success">add</span>
             ) : null}
             {model.permissions.change ? (
-              <span className="px-2 py-0.5 rounded bg-amber-50 text-amber-700">change</span>
+              <span className="px-2 py-0.5 rounded bg-warning/10 text-warning">change</span>
             ) : null}
             {model.permissions.delete ? (
-              <span className="px-2 py-0.5 rounded bg-red-50 text-red-700">delete</span>
+              <span className="px-2 py-0.5 rounded bg-error/10 text-error">delete</span>
             ) : null}
           </div>
         </Card>
@@ -163,7 +163,7 @@ function ModelCard({
           e.stopPropagation();
           onTogglePin();
         }}
-        className="absolute right-2 top-2 rounded p-1 text-gray-300 hover:bg-gray-100 hover:text-amber-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+        className="absolute right-2 top-2 rounded p-1 text-base-content/40 hover:bg-base-200 hover:text-amber-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       >
         <Star className={`h-4 w-4 ${pinned ? 'fill-amber-400 text-amber-400' : ''}`} aria-hidden />
       </button>

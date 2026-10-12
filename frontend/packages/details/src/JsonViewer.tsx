@@ -39,16 +39,16 @@ export default function JsonViewer({ raw, parsed }: JsonViewerProps) {
   }
 
   return (
-    <div className="relative w-full overflow-x-auto rounded border border-gray-200 bg-gray-50 p-3 font-mono text-xs leading-relaxed text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200">
+    <div className="relative w-full overflow-x-auto rounded border border-base-300 bg-base-200 p-3 font-mono text-xs leading-relaxed text-base-content">
       <button
         type="button"
         onClick={copy}
         aria-label="Copy JSON"
         title={copied ? 'Copied' : 'Copy'}
-        className="absolute right-2 top-2 inline-flex h-6 w-6 items-center justify-center rounded border border-gray-300 bg-white text-gray-600 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+        className="absolute right-2 top-2 inline-flex h-6 w-6 items-center justify-center rounded border border-base-300 bg-base-100 text-base-content/70 hover:bg-base-200"
       >
         {copied ? (
-          <Check className="h-3.5 w-3.5 text-green-600" aria-hidden />
+          <Check className="h-3.5 w-3.5 text-success" aria-hidden />
         ) : (
           <Copy className="h-3.5 w-3.5" aria-hidden />
         )}
@@ -62,27 +62,27 @@ export default function JsonViewer({ raw, parsed }: JsonViewerProps) {
 // syntax-highlight class. Containers (object/array) carry a clickable
 // toggle that collapses to `{…} N keys` or `[…] N items`.
 function Node({ value, depth }: { value: unknown; depth: number }) {
-  if (value === null) return <span className="text-purple-600 dark:text-purple-400">null</span>;
+  if (value === null) return <span className="text-purple-600">null</span>;
   if (typeof value === 'boolean')
     return (
-      <span className="text-purple-600 dark:text-purple-400">{value ? 'true' : 'false'}</span>
+      <span className="text-purple-600">{value ? 'true' : 'false'}</span>
     );
   if (typeof value === 'number')
-    // Use text-blue-700 (the variant with a `.dark` remap in
+    // Use text-primary (the variant with a `.dark` remap in
     // apps/web/src/index.css) so dark-mode coverage is automatic
     // — the JSX-side `dark:` variant alone is not what the
     // check-dark-mode-coverage.mjs lint accepts (#433).
-    return <span className="text-blue-700">{String(value)}</span>;
+    return <span className="text-primary">{String(value)}</span>;
   if (typeof value === 'string')
     return (
-      <span className="text-green-700 dark:text-green-400">
+      <span className="text-success">
         "{escapeForDisplay(value)}"
       </span>
     );
   if (Array.isArray(value)) return <ArrayNode value={value} depth={depth} />;
   if (typeof value === 'object') return <ObjectNode value={value as Record<string, unknown>} depth={depth} />;
   // Unknown type (shouldn't happen after JSON.parse — but render safely).
-  return <span className="text-gray-500">{String(value)}</span>;
+  return <span className="text-base-content/60">{String(value)}</span>;
 }
 
 function ObjectNode({ value, depth }: { value: Record<string, unknown>; depth: number }) {
@@ -90,7 +90,7 @@ function ObjectNode({ value, depth }: { value: Record<string, unknown>; depth: n
   // Top-level + the next level open by default; deeper levels start
   // collapsed so a 50 KB blob doesn't fill the viewport on first paint.
   const [open, setOpen] = useState(depth < 2);
-  if (keys.length === 0) return <span className="text-gray-500">{'{}'}</span>;
+  if (keys.length === 0) return <span className="text-base-content/60">{'{}'}</span>;
   return (
     <Block
       open={open}
@@ -102,10 +102,10 @@ function ObjectNode({ value, depth }: { value: Record<string, unknown>; depth: n
     >
       {keys.map((k, i) => (
         <div key={k} className="pl-4">
-          <span className="text-rose-700 dark:text-rose-400">"{escapeForDisplay(k)}"</span>
-          <span className="text-gray-500">: </span>
+          <span className="text-rose-700">"{escapeForDisplay(k)}"</span>
+          <span className="text-base-content/60">: </span>
           <Node value={value[k]} depth={depth + 1} />
-          {i < keys.length - 1 ? <span className="text-gray-500">,</span> : null}
+          {i < keys.length - 1 ? <span className="text-base-content/60">,</span> : null}
         </div>
       ))}
     </Block>
@@ -114,7 +114,7 @@ function ObjectNode({ value, depth }: { value: Record<string, unknown>; depth: n
 
 function ArrayNode({ value, depth }: { value: unknown[]; depth: number }) {
   const [open, setOpen] = useState(depth < 2);
-  if (value.length === 0) return <span className="text-gray-500">[]</span>;
+  if (value.length === 0) return <span className="text-base-content/60">[]</span>;
   return (
     <Block
       open={open}
@@ -127,7 +127,7 @@ function ArrayNode({ value, depth }: { value: unknown[]; depth: number }) {
       {value.map((v, i) => (
         <div key={i} className="pl-4">
           <Node value={v} depth={depth + 1} />
-          {i < value.length - 1 ? <span className="text-gray-500">,</span> : null}
+          {i < value.length - 1 ? <span className="text-base-content/60">,</span> : null}
         </div>
       ))}
     </Block>
@@ -159,25 +159,25 @@ function Block({
         onClick={onToggle}
         aria-expanded={open}
         // Aligns the chevron baseline with the bracket character.
-        className="inline-flex items-center align-baseline text-gray-500 hover:text-gray-800 dark:hover:text-gray-200"
+        className="inline-flex items-center align-baseline text-base-content/60 hover:text-base-content"
       >
         <ChevronRight
           className={`h-3 w-3 shrink-0 transition-transform ${open ? 'rotate-90' : ''}`}
           aria-hidden
         />
       </button>
-      <span className="text-gray-500">{openBracket}</span>
+      <span className="text-base-content/60">{openBracket}</span>
       {open ? (
         <>
           {children}
           <div className={depth === 0 ? '' : 'pl-0'}>
-            <span className="text-gray-500">{closeBracket}</span>
+            <span className="text-base-content/60">{closeBracket}</span>
           </div>
         </>
       ) : (
         <>
-          <span className="px-1 text-gray-500">{collapsedLabel}</span>
-          <span className="text-gray-500">{closeBracket}</span>
+          <span className="px-1 text-base-content/60">{collapsedLabel}</span>
+          <span className="text-base-content/60">{closeBracket}</span>
         </>
       )}
     </span>
