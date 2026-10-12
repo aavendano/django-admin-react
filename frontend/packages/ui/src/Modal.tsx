@@ -84,7 +84,7 @@ export function Modal({ title, onClose, children, footer }: ModalProps) {
         aria-modal="true"
         aria-labelledby={titleId}
         tabIndex={-1}
-        className="relative z-10 max-h-[85vh] w-full overflow-y-auto rounded-t-xl bg-white p-5 shadow-xl outline-none sm:max-w-md sm:rounded-xl"
+        className="relative z-10 max-h-[85vh] w-full overflow-y-auto rounded-t-xl bg-base-100 p-5 shadow-xl outline-none sm:max-w-md sm:rounded-xl"
       >
         <div className="mb-4 flex items-center justify-between">
           <h2 id={titleId} className="text-lg font-semibold">
@@ -94,7 +94,7 @@ export function Modal({ title, onClose, children, footer }: ModalProps) {
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="rounded p-1 text-gray-500 hover:bg-gray-100"
+            className="rounded p-1 text-base-content/60 hover:bg-base-200"
           >
             ✕
           </button>

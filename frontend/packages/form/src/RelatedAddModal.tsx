@@ -136,9 +136,9 @@ export function RelatedAddModal({ to, title, onCreated, onClose }: RelatedAddMod
   return (
     <Modal title={title ? `Add ${title}` : 'Add'} onClose={onClose}>
       {loadError ? (
-        <p className="text-sm text-red-600">{loadError}</p>
+        <p className="text-sm text-error">{loadError}</p>
       ) : !schema ? (
-        <p className="text-sm text-gray-500">Loading…</p>
+        <p className="text-sm text-base-content/60">Loading…</p>
       ) : (
         <form
           onSubmit={(e) => {
@@ -148,7 +148,7 @@ export function RelatedAddModal({ to, title, onCreated, onClose }: RelatedAddMod
           className="space-y-4"
         >
           {nonFieldError ? (
-            <p className="rounded border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700">
+            <p className="rounded border border-error/40 bg-error/10 px-3 py-2 text-sm text-error">
               {nonFieldError}
             </p>
           ) : null}

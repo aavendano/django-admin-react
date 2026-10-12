@@ -56,22 +56,26 @@ export function AccountMenu({ onAfterAction, identityLabel, roleLabel }: Account
     [
       'flex flex-1 items-center justify-center gap-1.5 rounded-md border px-2 py-1.5 text-sm font-medium',
       active
-        ? 'border-blue-600 bg-blue-50 text-blue-700'
-        : 'border-gray-300 text-gray-700 hover:bg-gray-50',
+        ? 'border-primary bg-primary/10 text-primary'
+        : 'border-base-300 text-base-content/80 hover:bg-base-200',
     ].join(' ');
 
   return (
     <div className="w-56 p-3">
       {identityLabel && (
-        <div className="mb-2 truncate text-xs text-gray-500" title={identityLabel}>
-          Signed in as <span className="font-medium text-gray-700">{identityLabel}</span>
-          {roleLabel ? <span className="text-gray-400"> · {roleLabel}</span> : null}
+        <div className="mb-2 truncate text-xs text-base-content/60" title={identityLabel}>
+          Signed in as <span className="font-medium text-base-content/80">{identityLabel}</span>
+          {roleLabel ? <span className="text-base-content/50"> · {roleLabel}</span> : null}
         </div>
       )}
 
-      <div className="mb-1 text-xs font-medium uppercase tracking-wide text-gray-500">
+      <div className="mb-1 text-xs font-medium uppercase tracking-wide text-base-content/60">
         Appearance
       </div>
+      <p className="mb-2 text-[11px] leading-snug text-base-content/50">
+        Preference is saved for compatibility. Palette comes from the SPA build
+        THEME (e.g. workbench, nocturne) — not a runtime dark remap.
+      </p>
       <div className="flex gap-2">
         <button
           type="button"
@@ -93,13 +97,13 @@ export function AccountMenu({ onAfterAction, identityLabel, roleLabel }: Account
         </button>
       </div>
 
-      <div className="mt-3 border-t border-gray-200 pt-3">
+      <div className="mt-3 border-t border-base-300 pt-3">
         <button
           type="button"
           role="menuitem"
           onClick={handleLogout}
           disabled={loggingOut}
-          className="flex w-full items-center justify-center gap-1.5 rounded-md border border-gray-300 px-2 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+          className="flex w-full items-center justify-center gap-1.5 rounded-md border border-base-300 px-2 py-1.5 text-sm font-medium text-base-content/80 hover:bg-base-200 disabled:opacity-50"
         >
           <LogOut className="h-4 w-4" aria-hidden />
           {loggingOut ? 'Signing out…' : 'Sign out'}

@@ -11,7 +11,7 @@ export interface BreadcrumbProps {
 }
 
 const LINK_CLASS =
-  'transition-colors hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-sm';
+  'transition-colors hover:text-base-content focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm';
 
 function Separator() {
   return (
@@ -25,7 +25,7 @@ function Separator() {
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
-      className="text-gray-400"
+      className="text-base-content/50"
     >
       <path d="m9 18 6-6-6-6" />
     </svg>
@@ -34,7 +34,7 @@ function Separator() {
 
 export function Breadcrumb({ items, renderLink }: BreadcrumbProps) {
   return (
-    <nav aria-label="Breadcrumb" className="text-sm text-gray-500">
+    <nav aria-label="Breadcrumb" className="text-sm text-base-content/60">
       <ol className="flex flex-wrap items-center gap-1.5 break-words sm:gap-2.5">
         {items.map((item, i) => {
           const last = i === items.length - 1;
@@ -52,7 +52,7 @@ export function Breadcrumb({ items, renderLink }: BreadcrumbProps) {
                 )
               ) : (
                 <span
-                  className={last ? 'font-normal text-gray-900' : undefined}
+                  className={last ? 'font-normal text-base-content' : undefined}
                   aria-current={last ? 'page' : undefined}
                 >
                   {item.label}

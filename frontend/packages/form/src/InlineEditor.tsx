@@ -151,7 +151,7 @@ export function InlineEditor({ inline, onItems }: InlineEditorProps) {
   const removeControl = (row: EditRow) =>
     row.pk !== null ? (
       inline.can_delete ? (
-        <label className="flex items-center gap-1 text-xs text-gray-500">
+        <label className="flex items-center gap-1 text-xs text-base-content/60">
           <Checkbox
             checked={row.deleted}
             // Block removing below min_num: a not-yet-deleted row can't be
@@ -166,7 +166,7 @@ export function InlineEditor({ inline, onItems }: InlineEditorProps) {
     ) : (
       <button
         type="button"
-        className="text-xs text-gray-400 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-40"
+        className="text-xs text-base-content/50 hover:text-error disabled:cursor-not-allowed disabled:opacity-40"
         disabled={atMin}
         onClick={() => removeNewRow(row.key)}
       >
@@ -179,7 +179,7 @@ export function InlineEditor({ inline, onItems }: InlineEditorProps) {
       <Button type="button" variant="secondary" onClick={addRow} disabled={atMax}>
         + Add {inline.label.toLowerCase()}
       </Button>
-      {atMax && <span className="text-xs text-gray-500">Maximum of {inline.max_num} reached.</span>}
+      {atMax && <span className="text-xs text-base-content/60">Maximum of {inline.max_num} reached.</span>}
     </div>
   ) : null;
 
@@ -191,14 +191,14 @@ export function InlineEditor({ inline, onItems }: InlineEditorProps) {
         {rows.map((row) => (
           <div
             key={row.key}
-            className={`rounded border border-gray-200 p-3 ${row.deleted ? 'opacity-40' : ''}`}
+            className={`rounded border border-base-300 p-3 ${row.deleted ? 'opacity-40' : ''}`}
           >
             <div className="space-y-2">
               {editableFields.map((f) => (
                 <div key={f.name} className="grid grid-cols-3 items-start gap-3">
-                  <label className="pt-1 text-sm text-gray-500">
+                  <label className="pt-1 text-sm text-base-content/60">
                     {f.label}
-                    {f.required ? <span className="text-red-500"> *</span> : null}
+                    {f.required ? <span className="text-error"> *</span> : null}
                   </label>
                   <div className="col-span-2">
                     <InlineCellInput
@@ -226,11 +226,11 @@ export function InlineEditor({ inline, onItems }: InlineEditorProps) {
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm">
           <thead>
-            <tr className="border-b border-gray-200 text-left text-gray-500">
+            <tr className="border-b border-base-300 text-left text-base-content/60">
               {editableFields.map((f) => (
                 <th key={f.name} className="py-1 pr-3 font-medium">
                   {f.label}
-                  {f.required ? <span className="text-red-500"> *</span> : null}
+                  {f.required ? <span className="text-error"> *</span> : null}
                 </th>
               ))}
               <th className="py-1" />
@@ -240,7 +240,7 @@ export function InlineEditor({ inline, onItems }: InlineEditorProps) {
             {rows.map((row) => (
               <tr
                 key={row.key}
-                className={`border-b border-gray-200 ${row.deleted ? 'opacity-40' : ''}`}
+                className={`border-b border-base-300 ${row.deleted ? 'opacity-40' : ''}`}
               >
                 {editableFields.map((f) => (
                   <td key={f.name} className="py-1 pr-3 align-top">
@@ -281,7 +281,7 @@ interface InlineCellInputProps {
 
 function InlineCellInput({ type, widget, value, disabled, onChange }: InlineCellInputProps) {
   const cls =
-    'w-full rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1';
+    'w-full rounded border border-base-300 px-2 py-1 text-sm focus:outline-none focus:ring-1';
 
   if (widget === 'password') {
     return (

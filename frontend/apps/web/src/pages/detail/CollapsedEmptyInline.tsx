@@ -18,7 +18,7 @@ export function CollapsedEmptyInline({ label }: { label: string }) {
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className="flex w-full items-center justify-between gap-2 text-left text-base font-semibold text-gray-900"
+        className="flex w-full items-center justify-between gap-2 text-left text-base font-semibold text-base-content"
       >
         <span>{label}</span>
         <ChevronDown
@@ -27,7 +27,7 @@ export function CollapsedEmptyInline({ label }: { label: string }) {
         />
       </button>
       {open ? (
-        <p className="mt-3 text-sm text-gray-500">
+        <p className="mt-3 text-sm text-base-content/60">
           No {label.toLowerCase()} yet. Click <span className="font-medium">Edit</span> to
           add the first one.
         </p>

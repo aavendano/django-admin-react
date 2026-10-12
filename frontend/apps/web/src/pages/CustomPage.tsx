@@ -108,11 +108,11 @@ export function CustomPage({
 
   return (
     <div className="space-y-4">
-      {loading && <div className="text-sm text-gray-500">{t('Loading…')}</div>}
+      {loading && <div className="text-sm text-base-content/60">{t('Loading…')}</div>}
       {error && (
         <div
           role="alert"
-          className="rounded border border-red-200 bg-red-50 p-3 text-sm text-red-700"
+          className="rounded border border-error/30 bg-error/10 p-3 text-sm text-error"
         >
           {page.label}: {error}
         </div>

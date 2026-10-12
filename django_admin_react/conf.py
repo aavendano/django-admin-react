@@ -20,10 +20,10 @@ from typing import Any
 
 from django.conf import settings as django_settings
 
-# Built-in fallback for the ``--dar-primary`` accent color when the
-# consumer hasn't set ``PRIMARY_COLOR`` AND their ``AdminSite`` has no
-# ``site_primary_color`` attribute. Re-exported so ``views.py`` can
-# pick up the same constant instead of stringifying its own.
+# Legacy hex kept for docs / PWA theme-color compatibility. The SPA
+# shell no longer injects this by default — unset PRIMARY_COLOR aliases
+# ``--dar-primary`` to ``var(--plt-color-primary)`` from the build-time
+# THEME design-system token.
 DEFAULT_PRIMARY_COLOR = "#2563eb"
 
 DEFAULTS: dict[str, Any] = {
@@ -60,20 +60,12 @@ DEFAULTS: dict[str, Any] = {
     #                        or a path under your ``STATIC_URL``.
     "BRAND_TITLE": None,
     "BRAND_LOGO_URL": None,
-    # ``PRIMARY_COLOR`` — the accent color for primary buttons, links, and
-    # active states (#437). Injected into the SPA template as the
-    # ``--dar-primary`` CSS variable so a consumer can brand the admin with
-    # no React rebuild. Must be a hex color (``#rgb`` / ``#rgba`` /
-    # ``#rrggbb`` / ``#rrggbbaa``); anything else is rejected at render and
-    # falls back to ``DEFAULT_PRIMARY_COLOR`` below, since the value is
-    # written into a ``<style>`` block and must not be able to inject CSS.
-    #
-    # ``None`` (default) means "consumer didn't explicitly set this" — the
-    # SPA reads ``site_primary_color`` off the configured ``AdminSite``
-    # next, then falls back to ``DEFAULT_PRIMARY_COLOR``. Mirrors
-    # ``BRAND_TITLE`` / ``BRAND_LOGO_URL``: setting wins as the
-    # per-deployment override, AdminSite attr is the structural default,
-    # built-in default last (#631).
+    # ``PRIMARY_COLOR`` — optional hex override for primary buttons, links,
+    # and active states (#437). Injected as ``--dar-primary``. Must be a
+    # hex color; anything else is rejected. ``None`` (default) means the
+    # SPA aliases ``--dar-primary`` to the build-time design-system token
+    # ``var(--plt-color-primary)`` (THEME), after optionally reading
+    # ``site_primary_color`` off the configured ``AdminSite`` (#631).
     "PRIMARY_COLOR": None,
     # ``REACT_LOGIN`` — React-rendered login is the **default** so the
     # SPA fully replaces the Django admin URL surface end-to-end (owner

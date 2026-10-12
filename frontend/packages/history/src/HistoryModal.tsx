@@ -8,9 +8,9 @@ import { useApiClient, type HistoryResponse } from '@dar/data';
 import { Modal, Spinner } from '@dar/ui';
 
 const ACTION_DOT: Record<string, string> = {
-  addition: 'bg-green-500',
-  change: 'bg-blue-500',
-  deletion: 'bg-red-500',
+  addition: 'bg-success',
+  change: 'bg-info',
+  deletion: 'bg-error',
 };
 
 export interface HistoryModalProps {
@@ -43,22 +43,22 @@ export function HistoryModal({ appLabel, modelName, pk, onClose }: HistoryModalP
   return (
     <Modal title="History" onClose={onClose}>
       {error ? (
-        <p className="text-sm text-red-600">{error}</p>
+        <p className="text-sm text-error">{error}</p>
       ) : !data ? (
         <Spinner label="Loading…" />
       ) : data.entries.length === 0 ? (
-        <p className="text-sm text-gray-500">No history recorded for this object yet.</p>
+        <p className="text-sm text-base-content/60">No history recorded for this object yet.</p>
       ) : (
         <ol className="space-y-3">
           {data.entries.map((entry) => (
             <li key={entry.id} className="flex gap-3 text-sm">
               <span
-                className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${ACTION_DOT[entry.action] ?? 'bg-gray-400'}`}
+                className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${ACTION_DOT[entry.action] ?? 'bg-base-content/40'}`}
                 aria-hidden
               />
               <div className="min-w-0">
-                <div className="text-gray-900">{entry.change_message_human || entry.action}</div>
-                <div className="text-xs text-gray-500">
+                <div className="text-base-content">{entry.change_message_human || entry.action}</div>
+                <div className="text-xs text-base-content/60">
                   {new Date(entry.action_time).toLocaleString()}
                   {entry.user ? ` · ${entry.user.label}` : ''}
                 </div>

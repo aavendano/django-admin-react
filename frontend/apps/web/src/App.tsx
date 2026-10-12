@@ -31,7 +31,7 @@ const CreatePage = lazy(() =>
 // Shared fallback for a lazy route chunk still in flight — a small, layout-
 // neutral hint rather than a blank frame.
 function RouteFallback() {
-  return <div className="p-6 text-sm text-gray-500">{t('Loading…')}</div>;
+  return <div className="p-6 text-sm text-base-content/60">{t('Loading…')}</div>;
 }
 
 // Remount ListPage when the model changes so per-model state (selection,
@@ -118,7 +118,7 @@ export function App() {
             <Route path=":appLabel/:modelName/:pk/delete" element={<DetailPage />} />
             <Route
               path="*"
-              element={<div className="p-6 text-sm text-gray-500">{t('Page not found.')}</div>}
+              element={<div className="p-6 text-sm text-base-content/60">{t('Page not found.')}</div>}
             />
           </Routes>
         </ErrorBoundary>

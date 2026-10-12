@@ -41,13 +41,13 @@ export function FieldInput({ name, field, value, error, onChange }: FieldInputPr
   const id = `dar-input-${name}`;
   const base =
     'w-full rounded border px-2 py-1 text-sm ' +
-    (error?.length ? 'border-red-400 focus:ring-red-500' : 'border-gray-300 focus:ring-gray-500');
+    (error?.length ? 'border-error/50 focus:ring-error' : 'border-base-300 focus:ring-base-content/40');
 
   // Read-only / unsupported → show the value, no input.
   if (field.readonly || field.type === 'unsupported') {
     return (
       <Row id={id} field={field} error={error}>
-        <div className="text-sm text-gray-700">
+        <div className="text-sm text-base-content/80">
           <FieldValueView value={field.value} type={field.type} />
         </div>
       </Row>
@@ -107,7 +107,7 @@ export function FieldInput({ name, field, value, error, onChange }: FieldInputPr
             onChange={(e) => onChange(e.target.value)}
             className={base}
           />
-          <p className="text-xs text-amber-700">
+          <p className="text-xs text-warning">
             {t('Custom widget')} <code className="font-mono">{field.widget_class}</code>{' '}
             {t('is not registered; using the default text input.')}
           </p>
@@ -146,7 +146,7 @@ export function FieldInput({ name, field, value, error, onChange }: FieldInputPr
             href={`../../${target.app_label}/${target.model_name}/`}
             target="_blank"
             rel="noopener noreferrer"
-            className="shrink-0 rounded border border-gray-300 px-2 py-1 text-xs text-gray-700 hover:bg-gray-50"
+            className="shrink-0 rounded border border-base-300 px-2 py-1 text-xs text-base-content/80 hover:bg-base-200"
             aria-label={t('Look up related object in a new tab')}
           >
             {t('Lookup ↗')}
@@ -175,7 +175,7 @@ export function FieldInput({ name, field, value, error, onChange }: FieldInputPr
                 value={key}
                 checked={radioValue === key}
                 onChange={() => onChange(c.value)}
-                className="h-4 w-4 text-gray-700 focus:ring-gray-500"
+                className="h-4 w-4 text-base-content/80 focus:ring-base-content/40"
               />
               {c.label}
             </label>
@@ -278,7 +278,7 @@ export function FieldInput({ name, field, value, error, onChange }: FieldInputPr
       );
     } else {
       control = (
-        <div className="max-h-48 space-y-1 overflow-y-auto rounded border border-gray-300 p-2">
+        <div className="max-h-48 space-y-1 overflow-y-auto rounded border border-base-300 p-2">
           {field.choices.map((c) => {
             const key = String(c.value);
             return (
@@ -325,7 +325,7 @@ export function FieldInput({ name, field, value, error, onChange }: FieldInputPr
     // case falls through to `unsupported_widget` below via the explicit note.
     const selectedSet = new Set((Array.isArray(value) ? value : []).map(String));
     control = (
-      <div className="max-h-48 space-y-1 overflow-y-auto rounded border border-gray-300 p-2">
+      <div className="max-h-48 space-y-1 overflow-y-auto rounded border border-base-300 p-2">
         {field.choices.map((c) => {
           const key = String(c.value);
           return (
@@ -361,12 +361,12 @@ export function FieldInput({ name, field, value, error, onChange }: FieldInputPr
           className={base}
         />
         {field.value ? (
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-base-content/60">
             {t('Current file:')}{' '}
             <FieldValueView value={field.value} type={field.type} />
           </p>
         ) : null}
-        <p className="text-xs text-amber-700">
+        <p className="text-xs text-warning">
           {t('File upload is not supported in the SPA yet; use the legacy admin to change the file.')}
         </p>
       </div>
@@ -385,7 +385,7 @@ export function FieldInput({ name, field, value, error, onChange }: FieldInputPr
           onChange={(e) => onChange(e.target.value)}
           className={base}
         />
-        <p className="text-xs text-amber-700">
+        <p className="text-xs text-warning">
           {t('This field uses a widget the SPA cannot render yet; edit it in the legacy admin if it looks wrong.')}
         </p>
       </div>
@@ -449,7 +449,7 @@ export function FieldInput({ name, field, value, error, onChange }: FieldInputPr
     const selected = new Set((Array.isArray(value) ? value : []).map(String));
     if (choices.length > 0) {
       control = (
-        <div className="max-h-48 space-y-1 overflow-y-auto rounded border border-gray-300 p-2">
+        <div className="max-h-48 space-y-1 overflow-y-auto rounded border border-base-300 p-2">
           {choices.map((c) => {
             const key = String(c.value);
             return (
@@ -471,7 +471,7 @@ export function FieldInput({ name, field, value, error, onChange }: FieldInputPr
       );
     } else {
       control = (
-        <div className="text-sm text-gray-700">
+        <div className="text-sm text-base-content/80">
           <FieldValueView value={field.value} type={field.type} />
         </div>
       );
@@ -604,7 +604,7 @@ export function FieldInput({ name, field, value, error, onChange }: FieldInputPr
           onChange={(e) => onChange([e.target.value, pair[1]])}
           className={base}
         />
-        <span aria-hidden className="text-gray-400">
+        <span aria-hidden className="text-base-content/50">
           –
         </span>
         <input
@@ -620,7 +620,7 @@ export function FieldInput({ name, field, value, error, onChange }: FieldInputPr
   } else {
     // Fallback: render value read-only for any type without an editor.
     control = (
-      <div className="text-sm text-gray-700">
+      <div className="text-sm text-base-content/80">
         <FieldValueView value={field.value} type={field.type} />
       </div>
     );
@@ -728,7 +728,7 @@ function ForeignKeyControl({ field, value, error, id, base, onChange }: ForeignK
         onClick={() => setAddOpen(true)}
         aria-label={`Add ${field.label}`}
         title={`Add ${field.label}`}
-        className="shrink-0 rounded-md border border-gray-300 p-1.5 text-gray-600 hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+        className="shrink-0 rounded-md border border-base-300 p-1.5 text-base-content/70 hover:bg-base-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       >
         <Plus className="h-4 w-4" aria-hidden />
       </button>
@@ -754,14 +754,14 @@ interface RowProps {
 function Row({ id, field, error, children }: RowProps) {
   return (
     <div className="py-2 grid grid-cols-3 gap-4 text-sm items-start">
-      <label htmlFor={id} className="text-gray-500 pt-1">
+      <label htmlFor={id} className="text-base-content/60 pt-1">
         {field.label}
-        {field.required && !field.readonly ? <span className="text-red-500"> *</span> : null}
+        {field.required && !field.readonly ? <span className="text-error"> *</span> : null}
       </label>
       <div className="col-span-2">
         {children}
-        {field.help_text ? <p className="mt-1 text-xs text-gray-400">{field.help_text}</p> : null}
-        {error?.length ? <p className="mt-1 text-xs text-red-600">{error.join(' ')}</p> : null}
+        {field.help_text ? <p className="mt-1 text-xs text-base-content/50">{field.help_text}</p> : null}
+        {error?.length ? <p className="mt-1 text-xs text-error">{error.join(' ')}</p> : null}
       </div>
     </div>
   );

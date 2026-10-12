@@ -274,14 +274,14 @@ function CreateForm({ schema, onCreate, onCancel }: CreateFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {nonFieldError && (
-        <div className="rounded border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700">
+        <div className="rounded border border-error/40 bg-error/10 px-3 py-2 text-sm text-error">
           {nonFieldError}
         </div>
       )}
       {so?.save_on_top && renderSaveActions()}
       {schema.fieldsets.map((fieldset, idx) => (
         <Card key={`cfs-${idx}-${fieldset.title ?? 'default'}`} title={fieldset.title ?? undefined}>
-          <div className="divide-y divide-gray-100">
+          <div className="divide-y divide-base-300">
             {(fieldset.field_rows ?? fieldset.fields.map((f) => [f])).map((row, ri) => {
               const renderInput = (name: string) => {
                 const field = schema.fields[name];

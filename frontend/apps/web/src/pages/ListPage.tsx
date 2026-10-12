@@ -462,7 +462,7 @@ export function ListPage() {
               value={value}
               onChange={(e) => setCell(pk, c.name, e.target.value)}
               onClick={(e) => e.stopPropagation()}
-              className="w-full rounded border border-gray-300 px-1.5 py-0.5 text-sm"
+              className="w-full rounded border border-base-300 px-1.5 py-0.5 text-sm"
               aria-label={`${c.label} for row ${pk}`}
             />
           );
@@ -575,14 +575,14 @@ export function ListPage() {
                 ? `Customize columns (${hiddenCols.size} hidden)`
                 : 'Customize columns'
             }
-            className="inline-flex shrink-0 items-center justify-center rounded-md border border-gray-300 px-2 py-1.5 text-sm hover:bg-gray-100"
+            className="inline-flex shrink-0 items-center justify-center rounded-md border border-base-300 px-2 py-1.5 text-sm hover:bg-base-200"
           >
             <Settings2 className="h-4 w-4" aria-hidden />
           </button>
           {data.permissions.add && (
             <Link
               to={withPreservedFilters(`/${appLabel}/${modelName}/add`, searchParams.toString())}
-              className="rounded-md border border-primary bg-primary px-3 py-2 text-sm font-medium text-white hover:opacity-90"
+              className="rounded-md border border-primary bg-primary px-3 py-2 text-sm font-medium text-primary-content hover:opacity-90"
             >
               + {data.verbose_name ? capitalize(data.verbose_name) : modelName}
             </Link>
@@ -628,7 +628,7 @@ export function ListPage() {
                   aria-haspopup="menu"
                   aria-expanded={actionsOpen}
                   disabled={runningAction}
-                  className="shrink-0 rounded-md border border-gray-300 px-3 py-1.5 text-sm hover:bg-gray-100 disabled:opacity-50"
+                  className="shrink-0 rounded-md border border-base-300 px-3 py-1.5 text-sm hover:bg-base-200 disabled:opacity-50"
                 >
                   Actions · {effectiveCount} ▾
                 </button>
@@ -641,7 +641,7 @@ export function ListPage() {
                     type="button"
                     role="menuitem"
                     onClick={() => requestAction(a)}
-                    className="block w-full truncate whitespace-nowrap px-3 py-2 text-left text-sm hover:bg-gray-100"
+                    className="block w-full truncate whitespace-nowrap px-3 py-2 text-left text-sm hover:bg-base-200"
                     title={a.description ?? a.label}
                   >
                     {a.label}
@@ -657,7 +657,7 @@ export function ListPage() {
       />
 
       {editCount > 0 && (
-        <div className="flex items-center justify-between rounded-md border border-blue-300 bg-blue-50 px-3 py-2 text-sm text-blue-700">
+        <div className="flex items-center justify-between rounded-md border border-primary/40 bg-primary/10 px-3 py-2 text-sm text-primary">
           <span>
             {editCount} row{editCount === 1 ? '' : 's'} with unsaved edits.
           </span>
@@ -680,7 +680,7 @@ export function ListPage() {
           click; dismiss closes the banner. Amber = "this needs your
           attention but it isn't an error." */}
       {pendingRedirect && (
-        <div className="flex items-center justify-between rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-800">
+        <div className="flex items-center justify-between rounded-md border border-warning/40 bg-warning/10 px-3 py-2 text-sm text-warning">
           <span>
             {pendingRedirect.label} wants to open a page —{' '}
             <a
@@ -705,7 +705,7 @@ export function ListPage() {
           filtered set (Django changelist parity); while active, say so and
           offer to clear. Only when the total is within the safe ?all cap. */}
       {canOfferAcross || selectAcross ? (
-        <div className="flex flex-wrap items-center justify-center gap-2 rounded-md border border-blue-300 bg-blue-50 px-3 py-2 text-center text-sm text-blue-700">
+        <div className="flex flex-wrap items-center justify-center gap-2 rounded-md border border-primary/40 bg-primary/10 px-3 py-2 text-center text-sm text-primary">
           {selectAcross ? (
             <>
               <span>All {matchingTotal.toLocaleString()} selected.</span>
@@ -758,7 +758,7 @@ export function ListPage() {
               data.permissions.add ? (
                 <Link
                   to={withPreservedFilters(`/${appLabel}/${modelName}/add`, searchParams.toString())}
-                  className="inline-flex shrink-0 rounded-md border border-blue-600 bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                  className="inline-flex shrink-0 rounded-md border border-primary bg-primary px-3 py-2 text-sm font-medium text-primary-content hover:opacity-90"
                 >
                   + Add {data.verbose_name ? capitalize(data.verbose_name) : modelName}
                 </Link>
@@ -847,7 +847,7 @@ export function ListPage() {
             </>
           }
         >
-          <p className="text-sm text-gray-700">
+          <p className="text-sm text-base-content/80">
             Run <span className="font-medium">{pendingAction.label}</span> on {effectiveCount}{' '}
             selected item{effectiveCount === 1 ? '' : 's'}?
           </p>

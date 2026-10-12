@@ -89,9 +89,9 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 }
 
 const KIND_CLASS: Record<ToastKind, string> = {
-  success: 'border-green-300 bg-green-50 text-green-700',
-  error: 'border-red-300 bg-red-50 text-red-700',
-  info: 'border-gray-300 bg-white text-gray-700',
+  success: 'border-success/40 bg-success/10 text-success',
+  error: 'border-error/40 bg-error/10 text-error',
+  info: 'border-base-300 bg-base-100 text-base-content/80',
 };
 
 function Toaster({ toasts, onDismiss }: { toasts: Toast[]; onDismiss: (id: number) => void }) {
@@ -119,7 +119,7 @@ function Toaster({ toasts, onDismiss }: { toasts: Toast[]; onDismiss: (id: numbe
             type="button"
             onClick={() => onDismiss(t.id)}
             aria-label="Dismiss notification"
-            className="shrink-0 text-gray-400 hover:text-gray-600"
+            className="shrink-0 text-base-content/50 hover:text-base-content/70"
           >
             <X className="h-4 w-4" aria-hidden />
           </button>
