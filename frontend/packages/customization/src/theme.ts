@@ -1,13 +1,8 @@
-// Theme (light / dark) preference + application (#84).
+// Appearance preference (light / dark) — API kept for AccountMenu compat.
 //
-// The preference is the single `THEME_KEY` localStorage entry. Applying a
-// theme toggles the `dark` class on <html>; the actual recolouring lives
-// in the app's index.css as a scoped `.dark` utility remap (so existing
-// light-utility components go dark without per-component `dark:` variants).
-//
-// `initTheme()` runs once, synchronously, before React mounts (see the
-// app's main.tsx) so the correct theme is on the page at first paint — no
-// flash from light to dark.
+// Visual authority is the build-time THEME (@playlovetoys/design-system).
+// Dark looks come from THEME=nocturne|docs (etc.), not a `.dark` remap.
+// applyTheme / initTheme only ensure data-theme="brand" and clear `.dark`.
 
 import { THEME_KEY } from './keys';
 import { readString, writeString } from './storage';
@@ -15,19 +10,12 @@ import { readString, writeString } from './storage';
 export type Theme = 'light' | 'dark';
 
 /**
- * Cookie the chosen theme is mirrored into so the SPA-serving view can
- * render the correct `.dark` class on `<html>` *before first paint* — no
- * light→dark flash (#84). A cookie (not just localStorage) because only the
- * server can paint pre-JS, and unlike an inline `<script>` it keeps a strict
- * `script-src 'self'` CSP intact (SECURITY.md QSEC-03). The value is a pure
- * UI pref (`light`/`dark`), never sensitive.
+ * Cookie kept for SPA shell compat; no longer drives `.dark` remaps.
  */
 export const THEME_COOKIE = 'dar-theme';
 
 function writeThemeCookie(theme: Theme): void {
   if (typeof document === 'undefined') return;
-  // SameSite=Lax: sent on the top-level navigation that loads the shell.
-  // path=/ so it reaches the package at any mount; 1-year persistence.
   document.cookie = `${THEME_COOKIE}=${theme}; path=/; max-age=31536000; SameSite=Lax`;
 }
 
@@ -50,26 +38,26 @@ export function resolveTheme(): Theme {
   return getStoredTheme() ?? systemTheme();
 }
 
-/** Reflect a theme onto the document (no persistence). */
-export function applyTheme(theme: Theme): void {
+/**
+ * Reflect DS brand theme onto the document. Ignores light/dark preference —
+ * build-time THEME owns the palette.
+ */
+export function applyTheme(_theme: Theme): void {
   if (typeof document === 'undefined') return;
-  document.documentElement.classList.toggle('dark', theme === 'dark');
+  document.documentElement.classList.remove('dark');
+  document.documentElement.setAttribute('data-theme', 'brand');
 }
 
-/** Persist a chosen theme and apply it immediately. */
+/** Persist a chosen preference (for AccountMenu) without remapping colors. */
 export function setTheme(theme: Theme): void {
   writeString(THEME_KEY, theme);
   writeThemeCookie(theme);
   applyTheme(theme);
 }
 
-/** Apply the effective theme. Call once before first paint. */
+/** Apply brand theme before first paint. */
 export function initTheme(): void {
   applyTheme(resolveTheme());
-  // Backfill the cookie for users who chose a theme before the server-side
-  // no-flash landed (localStorage set, cookie missing): mirror it now so
-  // their *next* load paints server-side without a flash (#84). Only an
-  // explicit choice is mirrored — a system default stays server-invisible.
   const stored = getStoredTheme();
   if (stored) writeThemeCookie(stored);
 }

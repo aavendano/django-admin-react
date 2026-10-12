@@ -31,9 +31,19 @@ frontend/
   The UI is metadata-driven.
 - **TypeScript `strict: true`.** No `any` in shipped code.
 - **React Query is the only data layer.** No Redux, Zustand, etc.
-- **Tailwind for styling.** Theme overrides via CSS variables; full
-  config replacement is out of scope for v1 (see `ARCHITECTURE.md`
-  §5.3).
+- **Tailwind 4 + daisyUI + `@playlovetoys/design-system`.** Visual look is
+  chosen **at build time** with `THEME` (default `workbench`), matching the
+  content workbench / Hydrogen contract. Dark palettes use `THEME=nocturne`
+  or `THEME=docs`, not a runtime `.dark` remap.
+
+## Theme
+
+```bash
+THEME=workbench pnpm --filter @dar/web build   # default if unset
+THEME=cheesecake pnpm --filter @dar/web build
+```
+
+`THEME` must match a file in `@playlovetoys/design-system/themes/<name>.css`.
 
 ## Development
 
@@ -41,7 +51,7 @@ frontend/
 pnpm install
 pnpm -r lint
 pnpm -r typecheck
-pnpm -r build
+THEME=workbench pnpm -r build
 ```
 
 Build pipeline, Vite config, ESLint, and Tailwind setup are tracked

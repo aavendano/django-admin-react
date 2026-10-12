@@ -52,7 +52,7 @@ export function Popover({
       {open && (
         <div
           role="dialog"
-          className={`absolute z-30 mt-1 rounded-md border border-gray-200 bg-white shadow-lg ${
+          className={`absolute z-30 mt-1 rounded-md border border-base-300 bg-base-100 shadow-lg ${
             align === 'right' ? 'right-0' : 'left-0'
           } ${panelClassName}`}
         >

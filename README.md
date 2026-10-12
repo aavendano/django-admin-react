@@ -10,6 +10,11 @@ A drop-in **React single-page admin** for any Django 5+ project. Same
 `pip install`, same `INSTALLED_APPS`, same `urls.py include()` — and
 your `ModelAdmin` classes drive everything. No React code on your side.
 
+**Visual theme (SPA build):** set `THEME` when building the frontend
+(default `workbench`). Values are `@playlovetoys/design-system` theme
+names (`workbench`, `cheesecake`, `neutral`, `nocturne`, …). Rebuild the
+content workbench with the same `THEME` so both UIs match.
+
 ```python
 # settings.py
 INSTALLED_APPS = [
@@ -159,13 +164,9 @@ DJANGO_ADMIN_REACT = {
     "BRAND_LOGO_URL": None,     # str | None — favicon + sidebar logo;
                                 # falls back to AdminSite.site_logo. Absolute
                                 # URL or a path under your STATIC_URL.
-    "PRIMARY_COLOR": None,      # accent for primary buttons, links, and
-                                # active states (#437 / #631). Hex only
-                                # (validated). None → reads
-                                # `site_primary_color` off your AdminSite;
-                                # fallback default is "#2563eb". Injected
-                                # as the --dar-primary CSS var, so
-                                # rebranding needs no React rebuild.
+    "PRIMARY_COLOR": None,      # optional hex accent override (#437 / #631).
+                                # None → site_primary_color, else DS
+                                # var(--plt-color-primary) from THEME build.
 
     # Auth + API mount
     "REACT_LOGIN": True,        # bool — React-rendered login is the default;
@@ -221,20 +222,20 @@ brand. No flash of the package's defaults.
 
 #### Accent colour (`PRIMARY_COLOR` + `AdminSite.site_primary_color`)
 
-`PRIMARY_COLOR` defaults to `None` so a custom `AdminSite` subclass can
-own the brand colour the same way it owns `site_header` / `site_logo`
-(#631). Resolution order — explicit setting wins, AdminSite is the
-structural default, built-in fallback last:
+By default the SPA aliases `--dar-primary` to the build-time design-system
+token `var(--plt-color-primary)` (chosen with `THEME` when building the
+frontend). `PRIMARY_COLOR` / `site_primary_color` remain optional hex
+overrides (#437 / #631):
 
 1. `DJANGO_ADMIN_REACT["PRIMARY_COLOR"]` — explicit per-deployment override.
 2. `<your AdminSite>.site_primary_color` — convention attribute on your
    custom `AdminSite` subclass (Django has no such attribute by default;
    add it as a constant alongside `site_header` / `site_logo`).
-3. `"#2563eb"` — the package's last-resort fallback.
+3. Design-system primary from `THEME` — no hex injected.
 
-Every layer runs through a strict hex-colour regex (`#rgb` / `#rgba` /
-`#rrggbb` / `#rrggbbaa`) before being injected into the SPA's `<style>`
-block, so a non-hex value at any layer falls through to the next — CSS
+Every override layer runs through a strict hex-colour regex (`#rgb` /
+`#rgba` / `#rrggbb` / `#rrggbbaa`) before being injected into the SPA's
+`<style>` block, so a non-hex value at any layer falls through — CSS
 injection is impossible at any source.
 
 ```python

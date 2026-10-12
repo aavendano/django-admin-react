@@ -16,7 +16,7 @@ const SIZE_CLASSES: Record<NonNullable<SpinnerProps['size']>, string> = {
  */
 export function Spinner({ size = 'md', label }: SpinnerProps) {
   return (
-    <span role="status" aria-live="polite" className="inline-flex items-center gap-2 text-gray-500">
+    <span role="status" aria-live="polite" className="inline-flex items-center gap-2 text-base-content/60">
       <svg
         className={`animate-spin ${SIZE_CLASSES[size]}`}
         xmlns="http://www.w3.org/2000/svg"

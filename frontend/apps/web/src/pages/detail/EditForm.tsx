@@ -204,7 +204,7 @@ export function EditForm({ data, onCancel, onSave }: EditFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {nonFieldError && (
-        <div className="rounded border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700">
+        <div className="rounded border border-error/40 bg-error/10 px-3 py-2 text-sm text-error">
           {nonFieldError}
         </div>
       )}
@@ -236,7 +236,7 @@ export function EditForm({ data, onCancel, onSave }: EditFormProps) {
 
         return (
           <Card key={`efs-${idx}-${fieldset.title ?? 'default'}`} title={fieldset.title ?? undefined}>
-            <div className="divide-y divide-gray-100">
+            <div className="divide-y divide-base-300">
               {editableRows.map((row, ri) => {
                 if (row.length === 1) return renderInput(row[0] as string);
                 // Multi-field row (#382): inputs side by side.
@@ -261,7 +261,7 @@ export function EditForm({ data, onCancel, onSave }: EditFormProps) {
         <Card key={`inline-${inline.name}`} title={inline.label}>
           <InlineEditor inline={inline} onItems={handleInlineItems} />
           {errors[`inlines.${inline.name}`]?.map((msg, i) => (
-            <p key={i} className="mt-2 text-xs text-red-600">
+            <p key={i} className="mt-2 text-xs text-error">
               {msg}
             </p>
           ))}

@@ -66,14 +66,14 @@ export function InlineSection({ inline }: { inline: InlineDescriptor }) {
   // Stacked: one definition list per child row.
   return (
     <Card title={inline.label}>
-      <div className="divide-y divide-gray-200">
+      <div className="divide-y divide-base-300">
         {inline.rows.map((row) => (
           <div key={row.pk} className="py-3">
             <dl className="grid grid-cols-3 gap-4 text-sm">
               {inline.fields.map((f) => (
                 <div key={f.name} className="contents">
-                  <dt className="text-gray-500">{f.label}</dt>
-                  <dd className="col-span-2 min-w-0 whitespace-pre-wrap break-words text-gray-900">
+                  <dt className="text-base-content/60">{f.label}</dt>
+                  <dd className="col-span-2 min-w-0 whitespace-pre-wrap break-words text-base-content">
                     <FieldValueView value={row.fields[f.name]} type={f.type} />
                   </dd>
                 </div>

@@ -372,17 +372,18 @@ There is exactly one data path inside the SPA:
 
 ### 5.3 Tailwind & theming
 
-- The package ships a `tailwind.config.js` with a minimal, modern, neutral
-  palette and CSS-variable-backed colors for trivial recoloring.
-- Consumers can extend it via their own `tailwind.config.js`.
-- **Partial replacement is supported** (e.g., override `colors`, `fontFamily`,
-  `spacing`).
-- **Full replacement of the config is not a v1 goal** — it would mean every
-  component is on a yet-undefined contract. We support theming through
-  CSS variables, which is enough for ~90% of branding needs without
-  rebuilding the bundle.
-- An "extend the bundle yourself" escape hatch is documented for advanced
-  users who want to rebuild from source against a custom Tailwind config.
+- The SPA uses **Tailwind 4** (`@tailwindcss/vite`) + **daisyUI 5** +
+  `@playlovetoys/design-system`.
+- Visual look is chosen **at build time** with `THEME` (default
+  `workbench`), resolved to `themes/<THEME>.css` via a Vite alias
+  `@plt-theme`. Unknown values fail the build.
+- Components use semantic utilities (`bg-base-*`, `text-base-content`,
+  `bg-primary`, …) and `--plt-*` / `--dar-primary` tokens — not hardcoded
+  gray scales. Dark palettes come from `THEME=nocturne` / `THEME=docs`,
+  not a runtime `.dark` remap.
+- Optional hex accent override: `DJANGO_ADMIN_REACT["PRIMARY_COLOR"]` or
+  `AdminSite.site_primary_color` → `--dar-primary`; otherwise
+  `var(--plt-color-primary)`.
 
 ### 5.4 Build & ship
 

@@ -87,17 +87,17 @@ export function LegacyAdminBanner() {
       aria-label="Experience toggle"
       // Thin persistent strip (#583), not a notice block:
       // - one line tall (~28px including padding),
-      // - muted neutral surface (uses bg-gray-50 / border-gray-200,
+      // - muted neutral surface (uses bg-base-200 / border-base-300,
       //   already in the .dark remap), no info-blue,
       // - no `×` / dismiss control,
       // - whole-line click target via the inner anchor.
-      className="-mx-6 -mt-6 mb-4 border-b border-gray-200 bg-gray-50 px-6 py-1 text-xs text-gray-600 lg:-mx-6 lg:-mt-6"
+      className="-mx-6 -mt-6 mb-4 border-b border-base-300 bg-base-200 px-6 py-1 text-xs text-base-content/70 lg:-mx-6 lg:-mt-6"
     >
       <a
         href={legacyUrl}
         target="_self"
         rel="noopener"
-        className="inline-flex items-center gap-1 hover:text-gray-900 hover:underline"
+        className="inline-flex items-center gap-1 hover:text-base-content hover:underline"
       >
         <span>Looking for the classic admin?</span>
         <span className="font-medium">Open this page in {`/${legacyPrefix}`.replace(/\/$/, '')}/</span>

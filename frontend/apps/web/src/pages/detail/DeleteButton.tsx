@@ -101,17 +101,17 @@ export function DeleteButton({ label, loadPreview, onConfirm }: DeleteButtonProp
             </>
           }
         >
-          <p className="text-sm text-gray-700">
+          <p className="text-sm text-base-content/80">
             Are you sure you want to delete <span className="font-medium">“{label}”</span>? This
             action cannot be undone.
           </p>
 
           {previewLoading && (
-            <p className="mt-3 text-sm text-gray-500">Checking what this affects…</p>
+            <p className="mt-3 text-sm text-base-content/60">Checking what this affects…</p>
           )}
 
           {preview && preview.cascade.length > 0 && (
-            <div className="mt-3 text-sm text-gray-700">
+            <div className="mt-3 text-sm text-base-content/80">
               <p className="font-medium">This will also delete:</p>
               <ul className="mt-1 list-disc pl-5">
                 {preview.cascade.map((c) => (
@@ -124,7 +124,7 @@ export function DeleteButton({ label, loadPreview, onConfirm }: DeleteButtonProp
           )}
 
           {preview && preview.protected.length > 0 && (
-            <div className="mt-3 rounded border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-800">
+            <div className="mt-3 rounded border border-warning/40 bg-warning/10 px-3 py-2 text-sm text-warning">
               <p className="font-medium">Blocked — protected related objects:</p>
               <ul className="mt-1 list-disc pl-5">
                 {preview.protected.map((p) => (
@@ -135,12 +135,12 @@ export function DeleteButton({ label, loadPreview, onConfirm }: DeleteButtonProp
           )}
 
           {preview && preview.perms_needed.length > 0 && (
-            <div className="mt-3 rounded border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-800">
+            <div className="mt-3 rounded border border-warning/40 bg-warning/10 px-3 py-2 text-sm text-warning">
               You don’t have permission to delete: {preview.perms_needed.join(', ')}.
             </div>
           )}
 
-          {err && <p className="mt-3 text-sm text-red-600">{err}</p>}
+          {err && <p className="mt-3 text-sm text-error">{err}</p>}
         </Modal>
       )}
     </>

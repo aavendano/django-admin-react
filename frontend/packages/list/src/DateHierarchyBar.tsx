@@ -47,11 +47,11 @@ export function DateHierarchyBar({ dh, onNavigate }: DateHierarchyBarProps) {
     return { year: active.year, month: active.month, day: v };
   };
 
-  const crumb = 'rounded px-1.5 py-0.5 text-primary hover:bg-blue-50 hover:underline';
+  const crumb = 'rounded px-1.5 py-0.5 text-primary hover:bg-primary/10 hover:underline';
 
   return (
     <nav aria-label="Date hierarchy" className="flex flex-wrap items-center gap-3 text-sm">
-      <div className="flex flex-wrap items-center gap-1 text-gray-500">
+      <div className="flex flex-wrap items-center gap-1 text-base-content/60">
         <button type="button" className={crumb} onClick={() => onNavigate({})}>
           All dates
         </button>
@@ -78,7 +78,7 @@ export function DateHierarchyBar({ dh, onNavigate }: DateHierarchyBarProps) {
         {active.day != null && (
           <>
             <span aria-hidden>/</span>
-            <span className="px-1.5 py-0.5 font-medium text-gray-700">{active.day}</span>
+            <span className="px-1.5 py-0.5 font-medium text-base-content/80">{active.day}</span>
           </>
         )}
       </div>
@@ -89,10 +89,10 @@ export function DateHierarchyBar({ dh, onNavigate }: DateHierarchyBarProps) {
               key={b.value}
               type="button"
               onClick={() => onNavigate(nextPath(b.value))}
-              className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 px-2.5 py-0.5 text-xs text-gray-700 hover:bg-gray-50"
+              className="inline-flex items-center gap-1.5 rounded-full border border-base-300 px-2.5 py-0.5 text-xs text-base-content/80 hover:bg-base-200"
             >
               {bucketLabel(b.value)}
-              <span className="text-gray-400">{b.count}</span>
+              <span className="text-base-content/50">{b.count}</span>
             </button>
           ))}
         </div>

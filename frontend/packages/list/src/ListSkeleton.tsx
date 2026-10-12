@@ -34,7 +34,7 @@ export function ListSkeleton({ rows = 8, columns = 5 }: ListSkeletonProps = {}) 
         <Skeleton className="h-9 w-28" />
       </div>
       <Card>
-        <div className="divide-y divide-gray-100">
+        <div className="divide-y divide-base-300">
           {Array.from({ length: rows }).map((_, i) => (
             <div key={i} className="flex items-center gap-4 px-4 py-3">
               {Array.from({ length: columns }).map((__, j) => (

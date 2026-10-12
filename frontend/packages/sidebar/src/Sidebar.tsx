@@ -216,13 +216,13 @@ export function Sidebar() {
     <>
       {/* Top bar — hamburger + brand. Shown on mobile AND tablet; the
           static sidebar only appears at lg (≥1024px). */}
-      <header className="lg:hidden fixed inset-x-0 top-0 z-30 flex h-14 items-center gap-3 bg-gray-900 px-4 text-gray-100">
+      <header className="lg:hidden fixed inset-x-0 top-0 z-30 flex h-14 items-center gap-3 bg-neutral px-4 text-neutral-content">
         <button
           type="button"
           aria-label="Open navigation"
           aria-expanded={drawerOpen}
           onClick={() => setDrawerOpen(true)}
-          className="-ml-2 rounded p-2 hover:bg-gray-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400"
+          className="-ml-2 rounded p-2 hover:bg-neutral/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-base-content/40"
         >
           <Menu className="h-5 w-5" aria-hidden />
         </button>
@@ -319,7 +319,7 @@ export function Sidebar() {
                 open={accountOpen}
                 onClose={() => setAccountOpen(false)}
                 align="left"
-                panelClassName="text-gray-700"
+                panelClassName="text-base-content/80"
                 trigger={
                   <button
                     type="button"
@@ -393,11 +393,11 @@ export function Sidebar() {
               }}
               placeholder="Filter models…"
               aria-label="Filter models"
-              // Bumped one step lighter than the sidebar surface (bg-gray-900)
+              // Bumped one step lighter than the sidebar surface (bg-neutral)
               // so the input reads as a distinct field, not as part of the
-              // sidebar (#556). `bg-gray-700` + `border-gray-600` gives the
+              // sidebar (#556). `bg-neutral/70` + `border-neutral-content/20` gives the
               // same two-step contrast the rest of the app's inputs have.
-              className="w-full rounded border border-gray-600 bg-gray-700 px-2 py-1 text-sm text-gray-100 placeholder-gray-400 focus:outline-none focus-visible:ring-1 focus-visible:ring-gray-500"
+              className="w-full rounded border border-neutral-content/20 bg-neutral/70 px-2 py-1 text-sm text-neutral-content placeholder-neutral-content/50 focus:outline-none focus-visible:ring-1 focus-visible:ring-base-content/40"
             />
           </div>
         )}
@@ -410,7 +410,7 @@ export function Sidebar() {
             rest. `gray-700` (one step lighter than `gray-800`, which was
             indistinguishable from the `gray-900` sidebar surface) so the
             line is actually visible (#556). */}
-        <nav className="border-t border-gray-700 divide-y divide-gray-700">
+        <nav className="border-t border-neutral-content/15 divide-y divide-neutral-content/15">
           {/* Consumer pages (CUSTOM_PAGES) first: they are hand-picked
               entry points, not part of the model registry, so the model
               filter does not apply to them. */}
@@ -527,7 +527,7 @@ export function Sidebar() {
             );
           })}
           {showFilter && visibleApps.length === 0 && (
-            <div className="px-2 text-sm text-gray-500">No models match “{query}”.</div>
+            <div className="px-2 text-sm text-base-content/60">No models match “{query}”.</div>
           )}
         </nav>
       </aside>

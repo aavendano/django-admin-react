@@ -29,13 +29,13 @@ export class ErrorBoundary extends Component<Props, State> {
     const { error } = this.state;
     if (!error) return this.props.children;
     return (
-      <div role="alert" className="m-6 rounded border border-red-300 bg-red-50 p-4 text-sm">
-        <p className="font-medium text-red-700">Something went wrong rendering this page.</p>
-        <p className="mt-1 break-words text-red-600">{error.message}</p>
+      <div role="alert" className="m-6 rounded border border-error/40 bg-error/10 p-4 text-sm">
+        <p className="font-medium text-error">Something went wrong rendering this page.</p>
+        <p className="mt-1 break-words text-error">{error.message}</p>
         <button
           type="button"
           onClick={() => window.location.reload()}
-          className="mt-3 rounded border border-gray-300 px-3 py-1 text-gray-700 hover:bg-gray-100"
+          className="mt-3 rounded border border-base-300 px-3 py-1 text-base-content/80 hover:bg-base-200"
         >
           Reload
         </button>

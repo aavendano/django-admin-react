@@ -1,14 +1,19 @@
 {% load static %}<!doctype html>
 {% comment %}
-  Dark mode no-flash (#84): paint the `.dark` class on <html> server-side
-  from the `dar-theme` cookie (see views._resolve_initial_theme) so the
-  correct theme is on the page before first paint — no light→dark flash,
-  and no inline script (keeps a strict `script-src 'self'` CSP intact).
+  Visual look comes from the build-time THEME (@playlovetoys/design-system).
+  daisyUI brand theme is always data-theme="brand". Dark palettes are chosen
+  with THEME=nocturne|docs at SPA build time, not a runtime `.dark` remap.
 {% endcomment %}
-<html lang="en"{% if initial_theme == 'dark' %} class="dark"{% endif %}>
+<html lang="en" data-theme="brand">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
     <meta name="dar-mount" content="{{ mount_point }}" />
     {% comment %}
       Absolute URL prefix the SPA calls for every JSON request (#559).
@@ -62,13 +67,14 @@
     <link rel="manifest" href="{{ mount_point }}web.manifest" />
     <meta name="theme-color" content="#ffffff" />
     {% comment %}
-      Accent color (#437): the SPA reads --dar-primary for primary buttons,
-      links, and active states, so a consumer can rebrand with no React
-      rebuild. `primary_color` is validated server-side to a strict hex
-      color (see views._resolve_primary_color) — it must not be able to
-      inject CSS through this <style> block.
+      Accent (#437): DS theme primary by default; PRIMARY_COLOR /
+      site_primary_color inject a validated hex when set.
     {% endcomment %}
+    {% if primary_color %}
     <style>:root { --dar-primary: {{ primary_color }}; }</style>
+    {% else %}
+    <style>:root { --dar-primary: var(--plt-color-primary); }</style>
+    {% endif %}
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="{{ tab_title }}" />
@@ -80,7 +86,7 @@
       <script type="module" src="{% static 'admin_react/' %}{{ bundle.file }}"></script>
     {% endif %}
   </head>
-  <body class="bg-gray-50 text-gray-900 antialiased">
+  <body class="bg-base-200 text-base-content antialiased">
     <div id="root">
       {% if not bundle %}
         <main style="max-width: 60ch; margin: 4rem auto; font-family: system-ui, sans-serif; line-height: 1.5;">

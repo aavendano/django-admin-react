@@ -95,7 +95,7 @@ export function FilterBar({
             onBlur={() => onSearchCommit?.()}
           />
           {searchHelpText ? (
-            <p id="dar-search-help" className="mt-1 text-xs text-gray-500">
+            <p id="dar-search-help" className="mt-1 text-xs text-base-content/60">
               {searchHelpText}
             </p>
           ) : null}
@@ -162,13 +162,13 @@ function FilterDropdown({ filter, value, onChange }: FilterDropdownProps) {
       type="button"
       onClick={() => setOpen((o) => !o)}
       aria-expanded={open}
-      className={`inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
-        value ? 'border-primary bg-blue-50 text-primary' : 'border-gray-300 hover:bg-gray-100'
+      className={`inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+        value ? 'border-primary bg-primary/10 text-primary' : 'border-base-300 hover:bg-base-200'
       }`}
     >
       <span>{filter.label}</span>
       {selectedLabel ? (
-        <span className="rounded bg-primary px-1.5 text-xs font-medium text-white">1</span>
+        <span className="rounded bg-primary px-1.5 text-xs font-medium text-primary-content">1</span>
       ) : null}
       <ChevronDown className="h-3.5 w-3.5 shrink-0" aria-hidden />
     </button>
@@ -182,13 +182,13 @@ function FilterDropdown({ filter, value, onChange }: FilterDropdownProps) {
             type="date"
             value={value}
             onChange={(e) => select(e.target.value)}
-            className="w-full rounded border border-gray-300 px-2 py-1 text-sm"
+            className="w-full rounded border border-base-300 px-2 py-1 text-sm"
           />
           {value ? (
             <button
               type="button"
               onClick={() => select('')}
-              className="mt-2 text-xs text-gray-500 hover:underline"
+              className="mt-2 text-xs text-base-content/60 hover:underline"
             >
               Clear
             </button>
@@ -250,7 +250,7 @@ function FilterOptions({ filterLabel, opts, value, onSelect }: FilterOptionsProp
   return (
     <div>
       {showSearch ? (
-        <div className="border-b border-gray-200 p-2">
+        <div className="border-b border-base-300 p-2">
           <input
             type="text"
             // The popover just opened expressly to filter, so focusing the
@@ -261,7 +261,7 @@ function FilterOptions({ filterLabel, opts, value, onSelect }: FilterOptionsProp
             onKeyDown={onKeyDown}
             placeholder="Type to filter…"
             aria-label={`Filter ${filterLabel} options`}
-            className="w-full rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            className="w-full rounded border border-base-300 px-2 py-1 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           />
         </div>
       ) : null}
@@ -276,9 +276,9 @@ function FilterOptions({ filterLabel, opts, value, onSelect }: FilterOptionsProp
               <button
                 type="button"
                 onClick={() => onSelect(v)}
-                className={`flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm hover:bg-gray-100 ${
-                  active ? 'bg-gray-100' : ''
-                } ${selected ? 'font-medium text-primary' : 'text-gray-700'}`}
+                className={`flex w-full items-center gap-2 px-3 py-1.5 text-left text-sm hover:bg-base-200 ${
+                  active ? 'bg-base-200' : ''
+                } ${selected ? 'font-medium text-primary' : 'text-base-content/80'}`}
               >
                 {selected ? (
                   <Check className="h-3.5 w-3.5 shrink-0" aria-hidden />
@@ -291,7 +291,7 @@ function FilterOptions({ filterLabel, opts, value, onSelect }: FilterOptionsProp
           );
         })}
         {showSearch && matches.length === 0 ? (
-          <li className="px-3 py-2 text-sm text-gray-400">No matches.</li>
+          <li className="px-3 py-2 text-sm text-base-content/50">No matches.</li>
         ) : null}
       </ul>
     </div>

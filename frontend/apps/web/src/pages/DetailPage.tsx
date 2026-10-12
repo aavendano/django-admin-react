@@ -146,7 +146,7 @@ export function DetailPage({ initialHistoryOpen = false }: DetailPageProps = {})
               // itself alongside the other small icon-only buttons
               // (Refresh, the per-object actions); the "History"
               // label was redundant chrome on a crowded header.
-              className="inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              className="inline-flex items-center justify-center rounded-md border border-base-300 bg-base-100 px-2 py-2 text-sm font-medium text-base-content/80 hover:bg-base-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               <Clock className="h-4 w-4" aria-hidden />
             </button>
@@ -155,7 +155,7 @@ export function DetailPage({ initialHistoryOpen = false }: DetailPageProps = {})
                 href={data.view_on_site_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                className="inline-flex items-center gap-1.5 rounded-md border border-base-300 bg-base-100 px-3 py-2 text-sm font-medium text-base-content/80 hover:bg-base-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
                 <ExternalLink className="h-4 w-4" aria-hidden /> View on site
               </a>

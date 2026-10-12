@@ -35,7 +35,7 @@ export function FieldsetSection({
         type="button"
         onClick={toggle}
         aria-expanded={open}
-        className="flex w-full items-center justify-between gap-2 text-left text-base font-semibold text-gray-900"
+        className="flex w-full items-center justify-between gap-2 text-left text-base font-semibold text-base-content"
       >
         <span>{fieldset.title ?? 'Details'}</span>
         <ChevronDown
@@ -46,9 +46,9 @@ export function FieldsetSection({
       {open ? (
         <div className="mt-3">
           {fieldset.description ? (
-            <p className="mb-3 text-xs text-gray-500">{fieldset.description}</p>
+            <p className="mb-3 text-xs text-base-content/60">{fieldset.description}</p>
           ) : null}
-          <dl className="divide-y divide-gray-100">
+          <dl className="divide-y divide-base-300">
             {(fieldset.field_rows ?? fieldset.fields.map((f) => [f])).map((row, ri) => {
               // A single-field row keeps the wide label | value layout; a
               // multi-field row (Django tuple grouping, #382) lays its
@@ -58,8 +58,8 @@ export function FieldsetSection({
                 if (!field) return null;
                 return (
                   <div key={ri} className="grid grid-cols-3 gap-4 py-2 text-sm">
-                    <dt className="text-gray-500">{field.label}</dt>
-                    <dd className="col-span-2 min-w-0 whitespace-pre-wrap break-words text-gray-900">
+                    <dt className="text-base-content/60">{field.label}</dt>
+                    <dd className="col-span-2 min-w-0 whitespace-pre-wrap break-words text-base-content">
                       <DetailValue field={field} />
                     </dd>
                   </div>
@@ -76,8 +76,8 @@ export function FieldsetSection({
                     if (!field) return null;
                     return (
                       <div key={name}>
-                        <dt className="text-gray-500">{field.label}</dt>
-                        <dd className="mt-0.5 min-w-0 whitespace-pre-wrap break-words text-gray-900">
+                        <dt className="text-base-content/60">{field.label}</dt>
+                        <dd className="mt-0.5 min-w-0 whitespace-pre-wrap break-words text-base-content">
                           <DetailValue field={field} />
                         </dd>
                       </div>

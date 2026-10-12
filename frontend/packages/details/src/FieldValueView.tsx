@@ -68,9 +68,9 @@ export function FieldValueView({ value, type }: FieldValueViewProps) {
   // em-dash placeholder (matching Django's "-" for an unknown boolean).
   if (typeof value === 'boolean') {
     return value ? (
-      <Check className="inline-block h-4 w-4 text-green-600" role="img" aria-label="Yes" />
+      <Check className="inline-block h-4 w-4 text-success" role="img" aria-label="Yes" />
     ) : (
-      <X className="inline-block h-4 w-4 text-red-600" role="img" aria-label="No" />
+      <X className="inline-block h-4 w-4 text-error" role="img" aria-label="No" />
     );
   }
   if (isHtmlValue(value)) {
@@ -95,7 +95,7 @@ export function FieldValueView({ value, type }: FieldValueViewProps) {
         </Link>
       );
     }
-    return <span className="font-medium text-gray-700">{value.label}</span>;
+    return <span className="font-medium text-base-content/80">{value.label}</span>;
   }
   // JSON-shaped string fields (#576): a TextField / JSONField whose
   // string value parses as JSON and exceeds the threshold renders
@@ -116,7 +116,7 @@ export function FieldValueView({ value, type }: FieldValueViewProps) {
   // FileField / ImageField: a download link to the stored file (matching
   // Django admin's "Currently: <a>" affordance). No URL → plain name.
   if (isFileValue(value)) {
-    if (!value.url) return <span className="text-gray-500">{value.name}</span>;
+    if (!value.url) return <span className="text-base-content/60">{value.name}</span>;
     return (
       <a
         href={value.url}
