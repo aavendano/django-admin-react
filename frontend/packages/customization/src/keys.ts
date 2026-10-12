@@ -17,6 +17,12 @@ export const THEME_KEY = 'dar:theme';
 /** Collapsed sidebar app-group labels (a Set of app labels). */
 export const NAV_COLLAPSE_KEY = 'dar:nav-collapsed';
 
+/**
+ * Desktop sidebar icon-rail mode (boolean). When true, the ≥lg sidebar
+ * shrinks to icons-only; the mobile/tablet off-canvas drawer is unchanged.
+ */
+export const SIDEBAR_RAIL_KEY = 'dar:sidebar-rail-collapsed';
+
 /** Pinned/favourited models on the home page (a Set of `app/model` keys). */
 export const PINNED_MODELS_KEY = 'dar:pinned-models';
 

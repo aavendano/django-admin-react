@@ -3,12 +3,32 @@
 // metadata-driven app/model nav, and the responsive drawer (static
 // column at ≥lg, off-canvas drawer below). The app shell composes
 // <Sidebar/> next to its own <main> content region.
+//
+// On ≥lg the column can collapse to an icon rail (persisted via
+// SIDEBAR_RAIL_KEY). Mobile/tablet keep the off-canvas drawer unchanged.
 
 import { useEffect, useMemo, useState } from 'react';
-import { ChevronDown, Download, Menu } from 'lucide-react';
+import {
+  Box,
+  ChevronDown,
+  Download,
+  Files,
+  GitPullRequest,
+  LayoutTemplate,
+  Menu,
+  PanelLeft,
+  PanelLeftClose,
+  User,
+  type LucideIcon,
+} from 'lucide-react';
 import { Link, NavLink } from 'react-router-dom';
 
-import { NAV_COLLAPSE_KEY, usePersistedSet } from '@dar/customization';
+import {
+  NAV_COLLAPSE_KEY,
+  SIDEBAR_RAIL_KEY,
+  usePersistedSet,
+  usePersistedState,
+} from '@dar/customization';
 import { useRegistry } from '@dar/data';
 import { AccountMenu } from '@dar/settings';
 import { Popover } from '@dar/ui';
@@ -94,6 +114,27 @@ function modelLabel(model: RegistryModel): string {
   return capfirst(model.verbose_name_plural || model.model_name);
 }
 
+/** Fixed Lucide icons for known editorial models; Box for everything else. */
+function iconForModel(modelName: string, label: string): LucideIcon {
+  const key = `${modelName} ${label}`.toLowerCase();
+  if (key.includes('index')) return Files;
+  if (key.includes('proposal')) return GitPullRequest;
+  return Box;
+}
+
+function iconForCustomPage(): LucideIcon {
+  return LayoutTemplate;
+}
+
+function navLinkClass(isActive: boolean, rail: boolean): string {
+  return [
+    'flex items-center gap-2 rounded text-sm',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-gray-400',
+    rail ? 'lg:justify-center lg:px-0 lg:py-2 px-2 py-1' : 'px-2 py-1',
+    isActive ? 'bg-gray-800 font-medium text-white' : 'hover:bg-gray-800',
+  ].join(' ');
+}
+
 // Keep an app when its own label matches (show all its models) or when
 // at least one model label matches (show just the matching models).
 // Case-insensitive substring — the same semantics as the legacy admin
@@ -136,6 +177,8 @@ export function Sidebar() {
   // Collapsed app-group sections (#227), persisted per device via
   // @dar/customization (the single home for localStorage-backed prefs).
   const [collapsed, setCollapsed] = usePersistedSet(NAV_COLLAPSE_KEY);
+  // Desktop icon-rail (≥lg only). Independent of the mobile drawer.
+  const [railCollapsed, setRailCollapsed] = usePersistedState(SIDEBAR_RAIL_KEY, false);
   const toggleApp = (appLabel: string): void => {
     setCollapsed((prev) => {
       const next = new Set(prev);
@@ -150,7 +193,7 @@ export function Sidebar() {
   // (react-hooks/exhaustive-deps).
   const apps = useMemo<RegistryApp[]>(() => (data?.apps ?? []) as RegistryApp[], [data?.apps]);
   const totalModels = useMemo(() => apps.reduce((n, app) => n + app.models.length, 0), [apps]);
-  const showFilter = totalModels >= FILTER_THRESHOLD;
+  const showFilter = totalModels >= FILTER_THRESHOLD && !railCollapsed;
   const visibleApps = useMemo(
     () => (showFilter ? filterApps(apps, query) : apps),
     [apps, query, showFilter],
@@ -167,6 +210,7 @@ export function Sidebar() {
   }, [drawerOpen]);
 
   const closeDrawer = () => setDrawerOpen(false);
+  const RailToggleIcon = railCollapsed ? PanelLeft : PanelLeftClose;
 
   return (
     <>
@@ -198,10 +242,14 @@ export function Sidebar() {
       )}
 
       {/* Sidebar: static column on large screens (≥lg); off-canvas
-          drawer on mobile AND tablet (< lg). */}
+          drawer on mobile AND tablet (< lg). Desktop can collapse to an
+          icon rail (w-16) without affecting the mobile drawer width. */}
       <aside
         className={[
-          'w-64 shrink-0 overflow-y-auto bg-gray-900 p-4 text-gray-100',
+          'shrink-0 overflow-y-auto bg-gray-900 text-gray-100',
+          'w-64 p-4',
+          railCollapsed ? 'lg:w-16 lg:px-2 lg:py-4' : 'lg:w-64',
+          'transition-[width] duration-200',
           // Mobile + tablet: fixed off-canvas drawer that slides in.
           'fixed inset-y-0 left-0 z-50 transform transition-transform duration-200',
           drawerOpen ? 'translate-x-0' : '-translate-x-full',
@@ -209,17 +257,51 @@ export function Sidebar() {
           'lg:static lg:z-auto lg:translate-x-0',
         ].join(' ')}
       >
-        <div className="mb-6">
-          <Link
-            to="/"
-            onClick={closeDrawer}
-            className="flex items-center gap-2 text-lg font-semibold hover:text-white"
+        <div className={railCollapsed ? 'mb-4 lg:mb-3' : 'mb-6'}>
+          <div
+            className={[
+              'flex items-center gap-2',
+              railCollapsed ? 'lg:flex-col lg:gap-2' : 'justify-between',
+            ].join(' ')}
           >
-            {BRAND_LOGO_URL && (
-              <img src={BRAND_LOGO_URL} alt="" className="h-6 w-6 shrink-0 rounded" />
-            )}
-            <span>{BRAND_TITLE}</span>
-          </Link>
+            <Link
+              to="/"
+              onClick={closeDrawer}
+              title={BRAND_TITLE}
+              aria-label={BRAND_TITLE}
+              className={[
+                'flex min-w-0 items-center gap-2 text-lg font-semibold hover:text-white',
+                railCollapsed ? 'lg:justify-center' : '',
+              ].join(' ')}
+            >
+              {BRAND_LOGO_URL ? (
+                <img src={BRAND_LOGO_URL} alt="" className="h-6 w-6 shrink-0 rounded" />
+              ) : (
+                <span
+                  className={[
+                    'h-6 w-6 shrink-0 items-center justify-center rounded bg-gray-800 text-xs font-bold',
+                    // Letter mark stands in for the title when the rail hides it.
+                    railCollapsed ? 'hidden lg:flex' : 'hidden',
+                  ].join(' ')}
+                  aria-hidden
+                >
+                  {BRAND_TITLE.charAt(0).toUpperCase()}
+                </span>
+              )}
+              <span className={railCollapsed ? 'lg:hidden' : ''}>{BRAND_TITLE}</span>
+            </Link>
+            {/* Desktop rail toggle — hidden on the mobile/tablet drawer. */}
+            <button
+              type="button"
+              onClick={() => setRailCollapsed(!railCollapsed)}
+              aria-label={railCollapsed ? 'Expand sidebar' : 'Collapse sidebar to icons'}
+              aria-pressed={railCollapsed}
+              title={railCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+              className="hidden rounded p-1.5 text-gray-400 hover:bg-gray-800 hover:text-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 lg:inline-flex"
+            >
+              <RailToggleIcon className="h-4 w-4" aria-hidden />
+            </button>
+          </div>
           {/* Identity dropdown (#578): a single email-with-caret button
               replaces the v1.0.2 two-line "<email> · <role>" + Settings
               button. The dropdown is mounted via the shared <Popover>
@@ -227,7 +309,12 @@ export function Sidebar() {
               the list-page Actions menu uses, #575). The optional Install
               affordance stays as a sibling button — orthogonal concern. */}
           {data?.user && (
-            <div className="mt-3 flex items-center gap-2">
+            <div
+              className={[
+                'mt-3 flex items-center gap-2',
+                railCollapsed ? 'lg:flex-col lg:items-stretch' : '',
+              ].join(' ')}
+            >
               <Popover
                 open={accountOpen}
                 onClose={() => setAccountOpen(false)}
@@ -239,14 +326,32 @@ export function Sidebar() {
                     onClick={() => setAccountOpen((o) => !o)}
                     aria-haspopup="menu"
                     aria-expanded={accountOpen}
+                    aria-label={data.user.display_name}
                     title={data.user.display_name}
-                    className="inline-flex max-w-full items-center gap-1.5 rounded bg-gray-800 px-2 py-1 text-xs text-gray-200 hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400"
+                    className={[
+                      'inline-flex items-center gap-1.5 rounded bg-gray-800 py-1 text-xs text-gray-200 hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400',
+                      railCollapsed
+                        ? 'max-w-full px-2 lg:w-full lg:justify-center lg:px-0 lg:py-2'
+                        : 'max-w-full px-2',
+                    ].join(' ')}
                   >
-                    <span className="truncate">{data.user.display_name}</span>
+                    <User
+                      className={
+                        railCollapsed
+                          ? 'hidden h-4 w-4 shrink-0 lg:block'
+                          : 'hidden'
+                      }
+                      aria-hidden
+                    />
+                    <span className={railCollapsed ? 'truncate lg:hidden' : 'truncate'}>
+                      {data.user.display_name}
+                    </span>
                     <ChevronDown
-                      className={`h-3.5 w-3.5 shrink-0 transition-transform ${
-                        accountOpen ? 'rotate-180' : ''
-                      }`}
+                      className={[
+                        'h-3.5 w-3.5 shrink-0 transition-transform',
+                        accountOpen ? 'rotate-180' : '',
+                        railCollapsed ? 'lg:hidden' : '',
+                      ].join(' ')}
                       aria-hidden
                     />
                   </button>
@@ -262,10 +367,15 @@ export function Sidebar() {
                 <button
                   type="button"
                   onClick={promptInstall}
-                  className="inline-flex items-center gap-1.5 rounded bg-gray-800 px-2 py-1 text-xs text-gray-200 hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400"
+                  title="Install app"
+                  aria-label="Install app"
+                  className={[
+                    'inline-flex items-center gap-1.5 rounded bg-gray-800 px-2 py-1 text-xs text-gray-200 hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400',
+                    railCollapsed ? 'lg:justify-center lg:px-0 lg:py-2' : '',
+                  ].join(' ')}
                 >
                   <Download className="h-3.5 w-3.5" aria-hidden />
-                  Install app
+                  <span className={railCollapsed ? 'lg:hidden' : ''}>Install app</span>
                 </button>
               )}
             </div>
@@ -306,14 +416,19 @@ export function Sidebar() {
               filter does not apply to them. */}
           {CUSTOM_PAGE_GROUPS.map(([group, pages]) => {
             const key = `custom:${group}`;
-            const isCollapsed = collapsed.has(key);
+            // Icon-rail forces groups open so every page stays reachable.
+            const isCollapsed = !railCollapsed && collapsed.has(key);
+            const PageIcon = iconForCustomPage();
             return (
               <div key={key} className="py-3">
                 <button
                   type="button"
                   onClick={() => toggleApp(key)}
                   aria-expanded={!isCollapsed}
-                  className="mb-1 flex w-full items-center justify-between gap-1 text-xs uppercase tracking-wide text-gray-400 hover:text-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400"
+                  className={[
+                    'mb-1 flex w-full items-center justify-between gap-1 text-xs uppercase tracking-wide text-gray-400 hover:text-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400',
+                    railCollapsed ? 'lg:hidden' : '',
+                  ].join(' ')}
                 >
                   <span className="truncate">{group}</span>
                   <ChevronDown
@@ -330,15 +445,15 @@ export function Sidebar() {
                         <NavLink
                           to={`/${page.path}`}
                           onClick={closeDrawer}
-                          className={({ isActive }) =>
-                            [
-                              'block rounded px-2 py-1 text-sm',
-                              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-gray-400',
-                              isActive ? 'bg-gray-800 font-medium text-white' : 'hover:bg-gray-800',
-                            ].join(' ')
-                          }
+                          title={page.label}
+                          aria-label={page.label}
+                          className={({ isActive }) => navLinkClass(isActive, railCollapsed)}
                         >
-                          {page.label}
+                          <PageIcon
+                            className={railCollapsed ? 'h-4 w-4 shrink-0' : 'hidden'}
+                            aria-hidden
+                          />
+                          <span className={railCollapsed ? 'lg:hidden' : ''}>{page.label}</span>
                         </NavLink>
                       </li>
                     ))}
@@ -350,14 +465,19 @@ export function Sidebar() {
           {visibleApps.map((app) => {
             // While a filter query is active, force every group open so
             // matches are never hidden behind a collapsed section.
-            const isCollapsed = !query.trim() && collapsed.has(app.app_label);
+            // Icon-rail likewise keeps every model visible.
+            const isCollapsed =
+              !railCollapsed && !query.trim() && collapsed.has(app.app_label);
             return (
               <div key={app.app_label} className="py-3">
                 <button
                   type="button"
                   onClick={() => toggleApp(app.app_label)}
                   aria-expanded={!isCollapsed}
-                  className="mb-1 flex w-full items-center justify-between gap-1 text-xs uppercase tracking-wide text-gray-400 hover:text-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400"
+                  className={[
+                    'mb-1 flex w-full items-center justify-between gap-1 text-xs uppercase tracking-wide text-gray-400 hover:text-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400',
+                    railCollapsed ? 'lg:hidden' : '',
+                  ].join(' ')}
                 >
                   <span className="truncate">{app.verbose_name}</span>
                   <ChevronDown
@@ -377,6 +497,8 @@ export function Sidebar() {
                       // the model's true `_meta.app_label`). Falls back to
                       // `app.app_label` for the default (ungrouped) case.
                       const routeApp = model.real_app_label || app.app_label;
+                      const label = modelLabel(model);
+                      const ModelIcon = iconForModel(model.model_name, label);
                       return (
                         <li key={`${routeApp}.${model.model_name}`}>
                           {/* NavLink highlights the current model — and stays
@@ -386,17 +508,15 @@ export function Sidebar() {
                           <NavLink
                             to={`/${routeApp}/${model.model_name}`}
                             onClick={closeDrawer}
-                            className={({ isActive }) =>
-                              [
-                                'block rounded px-2 py-1 text-sm',
-                                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-gray-400',
-                                isActive
-                                  ? 'bg-gray-800 font-medium text-white'
-                                  : 'hover:bg-gray-800',
-                              ].join(' ')
-                            }
+                            title={label}
+                            aria-label={label}
+                            className={({ isActive }) => navLinkClass(isActive, railCollapsed)}
                           >
-                            {modelLabel(model)}
+                            <ModelIcon
+                              className={railCollapsed ? 'h-4 w-4 shrink-0' : 'hidden'}
+                              aria-hidden
+                            />
+                            <span className={railCollapsed ? 'lg:hidden' : ''}>{label}</span>
                           </NavLink>
                         </li>
                       );
