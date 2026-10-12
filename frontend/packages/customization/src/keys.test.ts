@@ -4,6 +4,7 @@ import {
   CUSTOMIZATION_NAMESPACE,
   NAV_COLLAPSE_KEY,
   PRESERVED_ON_LOGOUT,
+  SIDEBAR_RAIL_KEY,
   THEME_KEY,
   columnsKey,
   columnWidthsKey,
@@ -16,6 +17,7 @@ describe('customization keys', () => {
     const keys = [
       THEME_KEY,
       NAV_COLLAPSE_KEY,
+      SIDEBAR_RAIL_KEY,
       columnsKey('auth', 'user'),
       filtersKey('auth', 'user'),
       detailCollapseKey('auth', 'user', 0, 'Main'),
