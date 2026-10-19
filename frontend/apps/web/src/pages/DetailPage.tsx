@@ -37,6 +37,7 @@ import { toastMessages, useToast } from '../toast';
 import { followActionRedirect } from '../action-redirect';
 import { carryPreservedFilters, listPathWithPreservedFilters } from '../changelistFilters';
 import { ChangeForm } from './detail/ChangeForm';
+import { CustomChangeViewGate } from './detail/CustomChangeViewGate';
 import { CustomViewsMenu } from './detail/CustomViewsMenu';
 import { DeleteButton } from './detail/DeleteButton';
 import { FieldsetSection } from './detail/FieldsetSection';
@@ -69,7 +70,7 @@ export function DetailPage({ initialHistoryOpen = false }: DetailPageProps = {})
   // "Save and continue editing" round-trip back in edit mode (#154).
   const [editing, setEditing] = useState(() => searchParams.get('edit') === '1');
   const [historyOpen, setHistoryOpen] = useState(initialHistoryOpen);
-  const { plural: modelPlural } = useModelMeta(appLabel, modelName);
+  const { plural: modelPlural, changeViewName } = useModelMeta(appLabel, modelName);
 
   // Detail-page action buttons (#571): per-object actions only, via
   // `django-object-actions` (`change_actions`). Surfaced by the API as
@@ -130,7 +131,7 @@ export function DetailPage({ initialHistoryOpen = false }: DetailPageProps = {})
             own line. `text-balance` rebalances the wrap for shorter
             multi-word titles too. */}
         <h1 className="text-2xl font-semibold text-balance break-words">{data.label}</h1>
-        {!editing && (
+        {!editing || changeViewName ? (
           // Toolbar row (#658/#672): full-width (`w-full`) so it never
           // shares horizontal space with the title/breadcrumb rows, and
           // `flex-wrap` so 8–14 actions reflow onto further lines rather
@@ -234,7 +235,7 @@ export function DetailPage({ initialHistoryOpen = false }: DetailPageProps = {})
               tooltip="Refresh"
               icon={<RefreshCw className="h-4 w-4" aria-hidden />}
             />
-            {canChange && (
+            {canChange && !changeViewName && (
               <Button variant="primary" onClick={() => setEditing(true)}>
                 <span className="inline-flex items-center gap-1.5">
                   <Pencil className="h-4 w-4" aria-hidden /> Edit
@@ -253,10 +254,17 @@ export function DetailPage({ initialHistoryOpen = false }: DetailPageProps = {})
               />
             )}
           </div>
-        )}
+        ) : null}
       </header>
 
-      {editing ? (
+      {changeViewName ? (
+        <CustomChangeViewGate
+          name={changeViewName}
+          appLabel={appLabel}
+          modelName={modelName}
+          objectId={pk}
+        />
+      ) : editing ? (
         <ChangeForm
           data={data}
           appLabel={appLabel}

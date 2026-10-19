@@ -17,6 +17,8 @@ import { useRegistry } from '@dar/data';
 export interface ModelMeta {
   singular: string;
   plural: string;
+  /** Opaque `react_change_view` key, if the ModelAdmin declared one. */
+  changeViewName?: string;
 }
 
 // Uppercase only the first character (Django's `capfirst`), leaving the
@@ -33,7 +35,11 @@ export function useModelMeta(appLabel: string, modelName: string): ModelMeta {
     for (const app of registry.data?.apps ?? []) {
       for (const m of app.models) {
         if (m.model_name === modelName && (m.real_app_label === appLabel || m.app_label === appLabel)) {
-          return { singular: capfirst(m.verbose_name), plural: capfirst(m.verbose_name_plural) };
+          return {
+            singular: capfirst(m.verbose_name),
+            plural: capfirst(m.verbose_name_plural),
+            changeViewName: m.change_view?.name,
+          };
         }
       }
     }

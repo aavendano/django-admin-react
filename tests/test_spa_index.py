@@ -166,9 +166,31 @@ def test_api_prefix_meta_adds_trailing_slash_when_missing(superuser_client: Clie
             _reload_conf()
 
 
-# --------------------------------------------------------------------------- #
-# Legacy-admin escape hatch (#577) — opt-in banner pointer                    #
-# --------------------------------------------------------------------------- #
+@pytest.mark.django_db
+def test_extra_module_scripts_and_stylesheets_injected(
+    superuser_client: Client, fake_manifest: Path
+) -> None:
+    """Same-origin plugin assets land in the SPA index. Off-origin URLs
+    are dropped. Script order versus the bundle is not a contract."""
+    with override_settings(
+        DJANGO_ADMIN_REACT={
+            "EXTRA_MODULE_SCRIPTS": [
+                "/static/content/admin_change_view.js",
+                "https://evil.example/x.js",
+                "//cdn.example/x.js",
+            ],
+            "EXTRA_STYLESHEETS": ["/static/content/workbench_app.css"],
+        }
+    ):
+        _reload_conf()
+        try:
+            body = superuser_client.get(ROOT_URL).content.decode("utf-8")
+        finally:
+            _reload_conf()
+    assert 'src="/static/content/admin_change_view.js"' in body
+    assert 'href="/static/content/workbench_app.css"' in body
+    assert "evil.example" not in body
+    assert "cdn.example" not in body
 @pytest.mark.django_db
 def test_legacy_admin_meta_absent_by_default(superuser_client: Client) -> None:
     """No `LEGACY_ADMIN_URL_PREFIX` setting → the `dar-legacy-admin-prefix`

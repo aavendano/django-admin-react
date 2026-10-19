@@ -63,6 +63,12 @@
       inject CSS through this <style> block.
     {% endcomment %}
     <style>:root { --dar-primary: {{ primary_color }}; }</style>
+    {% for href in extra_stylesheets %}
+      <link rel="stylesheet" href="{{ href }}" />
+    {% endfor %}
+    {% for src in extra_module_scripts %}
+      <script type="module" src="{{ src }}"></script>
+    {% endfor %}
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="{{ tab_title }}" />
     {% csrf_token %}

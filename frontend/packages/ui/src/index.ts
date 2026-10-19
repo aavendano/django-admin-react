@@ -64,3 +64,10 @@ export { t, loadCatalog } from './i18n';
 // (formfield_overrides / formfield_for_dbfield / custom Form).
 export { registerFieldWidget, lookupFieldWidget } from './custom-widget';
 export type { CustomWidgetProps, CustomWidgetSpec } from './custom-widget';
+
+export {
+  registerDarChangeView,
+  lookupChangeView,
+  _resetChangeViewRegistryForTests,
+} from './custom-change-view';
+export type { ChangeViewContext, ChangeViewSpec } from './custom-change-view';

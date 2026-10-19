@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.14.0] — 2026-09-16
+
+### Added
+- **`ModelAdmin.react_change_view` islands** via `window.darChangeViews`
+  (pre-bootstrap-safe, same pattern as `darFieldWidgets`). Registry
+  `change_view.name` is discovery; `GET form-spec` is the object gate;
+  then `CustomChangeViewHost` mounts. Missing plugin key → empty state,
+  no silent form-spec fallback. DocumentEditor-style plugins are the
+  change UI — they do not wait for `?edit=1`.
+- **`DJANGO_ADMIN_REACT["EXTRA_MODULE_SCRIPTS"]` / `EXTRA_STYLESHEETS`**
+  inject same-origin assets into the SPA index. Script order versus the
+  SPA bundle is not a contract.
+
+### Changed
+- Floor on `django-admin-rest-api` raised to **1.9.0** (`custom-view`
+  renderer).
+
 ## [1.13.0] — 2026-06-03
 
 ### Changed

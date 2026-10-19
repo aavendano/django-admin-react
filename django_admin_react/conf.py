@@ -142,6 +142,14 @@ DEFAULTS: dict[str, Any] = {
     # strip renders (reverse direction stays off — no implicit guess
     # at the consumer's chosen mount).
     "REACT_ADMIN_URL_PREFIX": None,
+    # Extra same-origin ``<script type="module">`` / ``<link rel="stylesheet">``
+    # injected into the SPA index. Used by consumer plugins (e.g. a
+    # ``window.darChangeViews`` island). Script order versus the SPA
+    # bundle is **not** a contract — plugins must assign
+    # ``window.darChangeViews = window.darChangeViews || {}`` so they
+    # work whether they load before or after the bundle.
+    "EXTRA_MODULE_SCRIPTS": (),
+    "EXTRA_STYLESHEETS": (),
     "PWA_NAME": None,
     "PWA_SHORT_NAME": None,
     "PWA_ICONS": None,
@@ -170,6 +178,8 @@ class _PackageSettings:
     API_URL_PREFIX: str | None = DEFAULTS["API_URL_PREFIX"]
     LEGACY_ADMIN_URL_PREFIX: str | None = DEFAULTS["LEGACY_ADMIN_URL_PREFIX"]
     REACT_ADMIN_URL_PREFIX: str | None = DEFAULTS["REACT_ADMIN_URL_PREFIX"]
+    EXTRA_MODULE_SCRIPTS: tuple[str, ...] = DEFAULTS["EXTRA_MODULE_SCRIPTS"]
+    EXTRA_STYLESHEETS: tuple[str, ...] = DEFAULTS["EXTRA_STYLESHEETS"]
     PWA_NAME: str | None = DEFAULTS["PWA_NAME"]
     PWA_SHORT_NAME: str | None = DEFAULTS["PWA_SHORT_NAME"]
     PWA_ICONS: list[dict[str, str]] | None = DEFAULTS["PWA_ICONS"]
@@ -188,6 +198,14 @@ def _load() -> _PackageSettings:
     unknown = set(merged) - set(DEFAULTS)
     if unknown:
         raise ValueError("Unknown DJANGO_ADMIN_REACT keys: " + ", ".join(sorted(unknown)))
+    for list_key in ("EXTRA_MODULE_SCRIPTS", "EXTRA_STYLESHEETS"):
+        value = merged[list_key]
+        if value is None:
+            merged[list_key] = ()
+        elif isinstance(value, (list, tuple)):
+            merged[list_key] = tuple(str(item) for item in value)
+        else:
+            raise ValueError(f"DJANGO_ADMIN_REACT[{list_key!r}] must be a list of strings")
     return _PackageSettings(**merged)
 
 

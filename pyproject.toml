@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-admin-react"
-version = "1.13.0"
+version = "1.14.0"
 description = "A drop-in React single-page admin for Django, driven entirely by ModelAdmin."
 authors = ["django-admin-react contributors"]
 license = "MIT"
@@ -67,7 +67,10 @@ django = ">=4.2,<7.0"
 # messages) plus a POST round-trip route (another html-fragment for
 # validation errors, or `{renderer: "redirect", to}`); the SPA injects the
 # fragment in-shell. The `legacy-iframe` renderer is gone (no more iframe).
-django-admin-rest-api = "^1.7.0"
+# Raised to 1.9.0 in v1.14.0: `ModelAdmin.react_change_view` emits
+# `renderer: "custom-view"` on form-spec so the SPA can mount a
+# consumer island without probing `change_view()`.
+django-admin-rest-api = "^1.9.0"
 # `django-admin-mcp-api` — MCP-protocol adapter over the same REST API
 # so agents reach the SAME `ModelAdmin`-driven surface. Wire-protocol-only
 # layer; adds NO new functionality, permissions, or validation.

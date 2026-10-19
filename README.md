@@ -893,6 +893,48 @@ it on the legacy `/admin/`, the
 [experience-toggle strip](#experience-toggle-strip-optional) +
 `LEGACY_ADMIN_URL_PREFIX` give consumers a one-click hop back.
 
+### Custom change views (`react_change_view` + `window.darChangeViews`)
+
+When a `ModelAdmin` sets `react_change_view = "content.document-editor"`
+(`django-admin-rest-api` 1.9.0+), the registry advertises
+`change_view: {name}` and `GET …/form-spec/<pk>/` returns
+`{"renderer": "custom-view", "view": {"name": "…"}}` **without** calling
+`change_view()`. The SPA treats that island as the change UI on both
+`/:app/:model/:pk` and `/:app/:model/:pk/change` — it does **not** wait
+for `?edit=1`, and it does **not** show stock fieldsets as the primary
+UX.
+
+Register the plugin the same way as field widgets: a same-origin
+`<script type="module">` that may load before **or** after the SPA
+bundle. Populate the global first:
+
+```html
+<script type="module">
+  window.darChangeViews = window.darChangeViews || {};
+  window.darChangeViews["content.document-editor"] = {
+    mount(element, context) {
+      // context: { appLabel, modelName, objectId, apiBaseUrl, csrfToken, navigate }
+    },
+    unmount(element) {},
+  };
+</script>
+```
+
+Inject that script (and any CSS) via settings — order versus the SPA
+bundle is **not** a contract:
+
+```python
+DJANGO_ADMIN_REACT = {
+    "EXTRA_MODULE_SCRIPTS": ["content/admin_change_view.js"],
+    "EXTRA_STYLESHEETS": ["content/workbench_app.css"],
+}
+```
+
+`window.registerDarChangeView(name, spec)` is optional, for
+registrations after the SPA has booted. If the key is missing at render
+time the SPA shows an empty state — it never silently falls back to the
+JSON form-spec.
+
 ---
 
 ## The API surface

@@ -142,6 +142,11 @@ export interface RegistryModelEntry {
    * absent when the model's admin exposes no custom routes.
    */
   custom_views?: CustomView[];
+  /**
+   * Opaque SPA mount key from `ModelAdmin.react_change_view` (rest-api
+   * 1.9.0+). Discovery only — form-spec still gates the object.
+   */
+  change_view?: { name: string };
 }
 
 export interface RegistryAppEntry {
@@ -813,8 +818,20 @@ export interface RedirectResponse {
   messages: FragmentMessage[];
 }
 
+/**
+ * SPA island for `ModelAdmin.react_change_view` (rest-api 1.9.0+).
+ * The SPA looks `view.name` up in `window.darChangeViews` at render time.
+ */
+export interface CustomChangeViewResponse {
+  renderer: 'custom-view';
+  view: { name: string };
+}
+
 /** GET `…/form-spec/` resolves to one of these (#679: no more `legacy-iframe`). */
-export type FormSpecPayload = FormSpecResponse | HtmlFragmentResponse;
+export type FormSpecPayload =
+  | FormSpecResponse
+  | HtmlFragmentResponse
+  | CustomChangeViewResponse;
 
 /**
  * POST `…/<pk>/change/` (the html-fragment round-trip, #679) resolves to

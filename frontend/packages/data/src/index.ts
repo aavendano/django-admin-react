@@ -37,6 +37,7 @@ export type {
   FormSpecField,
   FormSpecPayload,
   FormSpecResponse,
+  CustomChangeViewResponse,
   HtmlFragmentResponse,
   RedirectResponse,
   ChangePostPayload,

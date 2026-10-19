@@ -69,7 +69,7 @@ vi.mock('@dar/data', async (importOriginal) => {
 });
 
 vi.mock('../useModelMeta', () => ({
-  useModelMeta: () => ({ plural: 'Groups' }),
+  useModelMeta: () => ({ plural: 'Groups', changeViewName: undefined }),
 }));
 
 vi.mock('../toast', () => ({

@@ -42,6 +42,7 @@ from django.http import HttpResponse
 from django.middleware.csrf import get_token
 from django.shortcuts import redirect
 from django.shortcuts import render
+from django.templatetags.static import static
 from django.urls import NoReverseMatch
 from django.urls import reverse
 from django.urls import reverse_lazy
@@ -133,6 +134,8 @@ class SpaIndexView(View):
                 # language, matching what the API package already
                 # surfaces for ``verbose_name`` / ``help_text``.
                 "active_language": _resolve_active_language(),
+                "extra_module_scripts": _resolve_extra_assets(dar_conf.EXTRA_MODULE_SCRIPTS),
+                "extra_stylesheets": _resolve_extra_assets(dar_conf.EXTRA_STYLESHEETS),
             },
         )
         # The SPA shell must never be cached: it references the
@@ -451,6 +454,27 @@ def _resolve_api_prefix(request: HttpRequest) -> str:
     mount = _mount_from_request(request)
     # ``mount`` always ends in "/", so concatenation is safe.
     return f"{mount}api/v1/"
+
+
+def _resolve_extra_assets(paths: tuple[str, ...] | list[str]) -> list[str]:
+    """Same-origin URLs for EXTRA_MODULE_SCRIPTS / EXTRA_STYLESHEETS.
+
+    Accepts a static-relative path (``content/admin_change_view.js``) or
+    an absolute same-origin path (``/static/…``). Rejects protocol-relative
+    and absolute URLs so a settings typo cannot inject a third-origin script.
+    """
+    resolved: list[str] = []
+    for raw in paths:
+        if not isinstance(raw, str):
+            continue
+        value = raw.strip()
+        if not value or value.startswith("//") or "://" in value:
+            continue
+        if value.startswith("/"):
+            resolved.append(value)
+            continue
+        resolved.append(static(value))
+    return resolved
 
 
 def _mount_from_request(request: HttpRequest) -> str:

@@ -83,6 +83,10 @@ export function ChangeForm({
     );
   }
 
+  if (spec.renderer !== 'form-spec') {
+    return <EditForm data={data} onCancel={onCancel} onSave={onSave} />;
+  }
+
   return (
     <EditForm data={detailFromFormSpec(data, spec)} onCancel={onCancel} onSave={onSave} />
   );
